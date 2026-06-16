@@ -42,11 +42,21 @@ namespace MagicalTower.Runtime
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (IsTowerCollider(collision.collider))
+            {
+                return;
+            }
+
             Explode(collision.GetContact(0).point);
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            if (IsTowerCollider(other))
+            {
+                return;
+            }
+
             Explode(other.ClosestPoint(transform.position));
         }
 
@@ -77,12 +87,26 @@ namespace MagicalTower.Runtime
                     continue;
                 }
 
-                receiver.TakeDamage(new DamageRequest(
+                if (receiver is TowerHealth)
+                {
+                    continue;
+                }
+
+                var report = receiver.TakeDamage(new DamageRequest(
                     definition.Damage,
                     gameObject,
                     position,
                     definition.BurningStatusEffect));
+                GameLog.Info(
+                    LogChannel.Damage,
+                    $"Fireball dealt {report.Amount} area damage to {receiver.GetType().Name}. Fatal: {report.WasFatal}.",
+                    this);
             }
+        }
+
+        private static bool IsTowerCollider(Collider collider)
+        {
+            return collider != null && DamageReceiverLookup.FromCollider(collider) is TowerHealth;
         }
     }
 }

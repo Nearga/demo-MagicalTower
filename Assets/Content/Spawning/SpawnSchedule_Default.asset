@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.SpawnScheduleDefinition
   timeBands:
   - startTime: 0
-    spawnInterval: 2.2
+    spawnInterval: 2.6
     enemies:
     - enemyDefinition: {fileID: 11400000, guid: 5e6225e67e29df74f8e49446a26663e9, type: 2}
       weight: 8
     - enemyDefinition: {fileID: 11400000, guid: 99d9d7b048a96d74b9986f3156473d61, type: 2}
       weight: 2
   - startTime: 30
-    spawnInterval: 1.5
+    spawnInterval: 2
     enemies:
     - enemyDefinition: {fileID: 11400000, guid: 5e6225e67e29df74f8e49446a26663e9, type: 2}
       weight: 5
     - enemyDefinition: {fileID: 11400000, guid: 99d9d7b048a96d74b9986f3156473d61, type: 2}
       weight: 5
   - startTime: 60
-    spawnInterval: 1.1
+    spawnInterval: 1.45
     enemies:
     - enemyDefinition: {fileID: 11400000, guid: 5e6225e67e29df74f8e49446a26663e9, type: 2}
       weight: 4

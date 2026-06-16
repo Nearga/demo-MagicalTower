@@ -49,6 +49,16 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
   - `Assets/Content/StatusEffects/`
   - `Assets/Content/Pooling/`
 - Primitive materials/particles used as source visuals can live under `Assets/Materials/` and `Assets/VFX/` unless a better project convention appears.
+- Phase 6 generated texture assets:
+  - `Assets/Art/Generated/Textures/Tower_RuneStone.png`
+  - `Assets/Art/Generated/Textures/Arena_BasaltFloor.png`
+  - `Assets/Art/Generated/Textures/Enemy_ObsidianHide.png`
+  - `Assets/Art/Generated/Textures/Fireball_Glow.png`
+- Phase 6 material assets:
+  - `Assets/Materials/Tower_RuneStone.mat`
+  - `Assets/Materials/Arena_BasaltFloor.mat`
+  - `Assets/Materials/Enemy_ObsidianHide.mat`
+  - `Assets/Materials/Fireball_Glow.mat`
 
 ## Cross-module routes
 
@@ -60,6 +70,7 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 
 - Before gameplay phases, validate every definition has runtime consumers before treating the content path as complete.
 - Balance changes should report exact asset/value changes.
+- Phase 6 tuning changed enemy contact damage/interval/speed, spawn intervals, and fireball/barrage cooldown/projectile values in existing content assets.
 - For expandable-system proof, add at least one path where a new enemy or spell can be configured by creating data plus one focused behavior owner when needed.
 
 ## Do-not-touch
@@ -71,5 +82,5 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 ## Open gaps
 
 - Runtime consumers exist under `Assets/Scripts/Runtime/` and Phase 4 gameplay prefabs consume the configured content assets.
-- No final materials, particles, UI presentation, or damage-number assets exist yet.
-- Initial balance values exist in Phase 2 assets and can be tuned after Play Mode validation.
+- Phase 6 final prototype materials now exist for tower, arena floor, enemy, and fireball glow.
+- Initial balance values were tuned in Phase 6 after Play Mode validation exposed projectile self-damage and later confirmed contact-driven tower damage.

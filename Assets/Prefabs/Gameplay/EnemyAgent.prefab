@@ -94,7 +94,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8208115234fdfa847ab48c0b7608b638, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -151,7 +151,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemyMovementController
   agent: {fileID: 259133387336695461}
   target: {fileID: 0}
-  stoppingDistance: 1.5
+  enemyCollider: {fileID: 0}
+  targetCollider: {fileID: 0}
+  contactTolerance: 0.05
+  missingColliderStoppingDistance: 0.35
 --- !u!114 &8369782340217972742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,7 +169,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemyAttackController
   agent: {fileID: 259133387336695461}
   target: {fileID: 0}
-  attackRange: 1.7
+  enemyCollider: {fileID: 0}
+  towerCollider: {fileID: 0}
+  contactTolerance: 0.05
+  missingColliderFallbackRange: 0.35
 --- !u!114 &8614150440431958020
 MonoBehaviour:
   m_ObjectHideFlags: 0

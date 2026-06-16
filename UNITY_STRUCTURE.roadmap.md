@@ -115,8 +115,24 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - enemy surface
   - fireball glow.
 - Keep primitive meshes and particles as the default visual style.
+- Add per-feature debug logging system:
+  - create `Assets/Scripts/Runtime/Utility/GameLog.cs` — static wrapper with `[Conditional("UNITY_EDITOR")]` so all calls strip from production builds at zero cost.
+  - define `LogChannel` enum with one entry per feature area (e.g. `Damage`, `Spawning`, `Pooling`, `Spells`, `Session`).
+  - enable/disable channels with a `HashSet<LogChannel>`; toggling a single line is enough to silence or expose a feature's logs.
+  - pass `Object context` to all call sites so clicking a console entry pings the relevant GameObject in the Hierarchy.
+  - wire `LogChannel.Damage` call sites into damage-dealing paths (projectile hits, burning ticks, tower contact damage) as the first use case.
 
-## Phase 7: Validation
+## Phase 7: Explosion And Burning Visuals
+
+- Add a fire nova explosion visual spawned by `LinearExplosiveProjectile` at the projectile impact point.
+- Drive the nova radius from `ProjectileDefinition.ImpactRadius` so the visual matches the actual damage area.
+- Parent transient fire VFX under the existing scene `VfxRoot`.
+- Add a burning enemy visual effect tied to `StatusEffectController.BurningRoutine`.
+- Ensure refreshed burning does not duplicate active burn visuals.
+- Clean up burning visuals when enemies despawn, die, disable, or return to the pool.
+- Validate in Play Mode and save a verification screenshot under `Assets/Screenshots~/`.
+
+## Phase 8: Validation
 
 - Compile/import validation:
   - Unity batchmode compile/import with Unity `6000.4.8f1`.
@@ -133,14 +149,8 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - Barrage fires one arcing projectile per visible enemy
   - damage numbers appear for enemies and tower
   - spawn pressure increases over time.
-- Add per-feature debug logging system:
-  - create `Assets/Scripts/Runtime/Utility/GameLog.cs` — static wrapper with `[Conditional("UNITY_EDITOR")]` so all calls strip from production builds at zero cost.
-  - define `LogChannel` enum with one entry per feature area (e.g. `Damage`, `Spawning`, `Pooling`, `Spells`, `Session`).
-  - enable/disable channels with a `HashSet<LogChannel>`; toggling a single line is enough to silence or expose a feature's logs.
-  - pass `Object context` to all call sites so clicking a console entry pings the relevant GameObject in the Hierarchy.
-  - wire `LogChannel.Damage` call sites into damage-dealing paths (projectile hits, burning ticks, tower contact damage) as the first use case.
 
-## Phase 8: Replayability
+## Phase 9: Replayability
 
 - Implement full game loop: play → game over → restart → play.
 - Add a Restart button to the game-over panel.

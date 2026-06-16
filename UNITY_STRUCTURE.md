@@ -17,7 +17,7 @@
 
 ## Current Project Shape
 
-- Project-owned source root: `Assets/` exists but is currently empty.
+- Project-owned source root: `Assets/` contains the prototype scene, runtime/content/UI scripts, ScriptableObject content, prefabs, generated textures, materials, and validation screenshots.
 - Package/dependency root: `Packages/`
 - Unity settings root: `ProjectSettings/`
 - Generated/cache roots: `Library/`, `Logs/`, `UserSettings/`
@@ -33,6 +33,10 @@
 - Project-owned asmdefs: none currently found under `Assets/`.
 - Product/task brief: parent `Test Task.md` describes a 3D Magical Tower survivor-style prototype with enemies, configurable spawning difficulty, spells/projectiles/status effects, tower health/game over, damage numbers, and architecture/expandability as the main review focus.
 - Established source roots: `Assets/Scripts/Content/`, `Assets/Scenes/`, `Assets/Content/`, `Assets/Materials/`, `Assets/Prefabs/`, `Assets/Art/Generated/Textures/`.
+- Phase 6 polish assets:
+  - Generated textures: `Assets/Art/Generated/Textures/`
+  - Materials: `Assets/Materials/`
+  - Validation screenshots: `Assets/Screenshots~/`
 
 ## Do-Not-Touch Areas
 
@@ -50,4 +54,5 @@
 
 - Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
 - Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; Phase 4 gameplay prefabs and explicit scene wiring exist. Phase 5 UI presenters and damage-number prefab exist under `Assets/Scripts/UI/` and `Assets/Prefabs/UI/`. Assembly ownership still needs a first concrete owner.
+- Phase 6 added editor-only runtime logging under `Assets/Scripts/Runtime/Utility/`, collision-gated enemy contact damage, tuned content assets, generated material textures, and a scene-owned `ArenaFloor` visual plane.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

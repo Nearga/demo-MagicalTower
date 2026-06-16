@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb54b7aad46352f4a98065c9c7da1a9b, type: 3}
   m_Name: Projectile_Barrage
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.ProjectileDefinition
-  damage: 10
-  speed: 7
+  damage: 9
+  speed: 8
   impactRadius: 0
   arcHeight: 3
   burningStatusEffect: {fileID: 0}

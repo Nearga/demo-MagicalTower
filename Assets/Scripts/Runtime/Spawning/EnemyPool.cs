@@ -62,6 +62,7 @@ namespace MagicalTower.Runtime
             enemy.transform.SetPositionAndRotation(position, rotation);
             enemy.Configure(definition, targetTower, registry, messageBus, this);
             enemy.gameObject.SetActive(true);
+            GameLog.Info(LogChannel.Pooling, $"Activated pooled {definition.DisplayName}.", enemy);
             return enemy;
         }
 
@@ -75,6 +76,7 @@ namespace MagicalTower.Runtime
             enemy.gameObject.SetActive(false);
             enemy.transform.SetParent(poolRoot, true);
             inactiveEnemies.Enqueue(enemy);
+            GameLog.Info(LogChannel.Pooling, "Returned enemy to pool.", enemy);
         }
 
         private void Prewarm()
@@ -127,6 +129,7 @@ namespace MagicalTower.Runtime
             var enemy = Instantiate(enemyPrefab, poolRoot);
             enemy.gameObject.SetActive(false);
             createdCount++;
+            GameLog.Info(LogChannel.Pooling, $"Created enemy pool instance {createdCount}/{MaxCapacity}.", enemy);
             return enemy;
         }
 

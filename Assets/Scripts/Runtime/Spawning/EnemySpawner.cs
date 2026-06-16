@@ -63,6 +63,10 @@ namespace MagicalTower.Runtime
             direction.y = 0f;
             var rotation = direction.sqrMagnitude > 0.001f ? Quaternion.LookRotation(direction.normalized) : Quaternion.identity;
             enemyPool.Spawn(definition, position, rotation);
+            GameLog.Info(
+                LogChannel.Spawning,
+                $"Spawned {definition.DisplayName} at {position} after {gameSession.ElapsedTime:0.0}s.",
+                this);
         }
 
         private bool CanSpawn()

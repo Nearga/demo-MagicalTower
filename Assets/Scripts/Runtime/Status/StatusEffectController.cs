@@ -54,6 +54,10 @@ namespace MagicalTower.Runtime
                         : Vector3.zero;
 
                     damageReceiver.TakeDamage(new DamageRequest(definition.DamagePerTick, source, tickPosition));
+                    GameLog.Info(
+                        LogChannel.Damage,
+                        $"Burning tick dealt {definition.DamagePerTick} damage to {damageReceiver.GetType().Name}.",
+                        this);
 
                     // Separate message so UI can color burning ticks distinctly
                     if (messageBus != null && damageReceiver is EnemyAgent enemy)

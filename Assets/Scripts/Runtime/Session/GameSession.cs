@@ -36,6 +36,7 @@ namespace MagicalTower.Runtime
 
             IsGameOver = true;
             messageBus?.Publish(new TowerDestroyedMessage(tower));
+            GameLog.Info(LogChannel.Session, $"Game over at {ElapsedTime:0.0}s.", this);
             GameOver?.Invoke();
         }
     }

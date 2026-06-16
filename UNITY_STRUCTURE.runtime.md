@@ -16,6 +16,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - `Assets/Scripts/Runtime/Spells/`
   - `Assets/Scripts/Runtime/Projectiles/`
   - `Assets/Scripts/Runtime/Status/`
+  - `Assets/Scripts/Runtime/Utility/`
 - Task brief: parent `Test Task.md`.
 - Proposed scene root: `Assets/Scenes/`.
 - Proposed runtime source root: `Assets/Scripts/Runtime/`.
@@ -34,6 +35,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - Spell casting: `TowerSpellScheduler`.
   - Projectiles: `LinearExplosiveProjectile`, `ArcTargetProjectile`.
   - Damage/status: `IDamageReceiver`, `DamageRequest`, `DamageReport`, `StatusEffectController`.
+  - Editor-only diagnostics: `GameLog`, `LogChannel`.
 - Live prefab owners:
   - `Assets/Prefabs/Gameplay/Tower.prefab`
   - `Assets/Prefabs/Gameplay/EnemyAgent.prefab`
@@ -44,6 +46,10 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 - Runtime should read tuning from content definitions rather than hardcoded branches where practical.
 - Expected data inputs from `UNITY_STRUCTURE.content.md`: `EnemyDefinition`, `SpellDefinition`, `ProjectileDefinition`, `SpawnScheduleDefinition`, `BurningStatusEffectDefinition`, `TowerDefinition`, and `EnemyPoolConfig` assets.
+- Phase 6 tower HP ownership:
+  - Enemy contact damage is collision-gated in `EnemyAttackController` using enemy/tower colliders plus `contactTolerance`; center-distance `attackRange` is no longer the tower damage gate.
+  - `EnemyMovementController` follows the same collider-contact semantics before stopping; missing-collider fallback is intentionally small.
+  - `LinearExplosiveProjectile` ignores `TowerHealth` colliders/receivers so tower-cast fireballs cannot damage the tower.
 
 ## Cross-module routes
 
@@ -56,6 +62,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 - After adding runtime code, validate Unity compile/import with Unity `6000.4.8f1`.
 - For gameplay proof, use Play Mode with a scene containing tower, camera, spawner, enemy definitions, spell definitions, and UI.
+- Phase 6 validation proof captured contact logs showing tower HP stayed at 100 until enemy contact; screenshot saved to `Assets/Screenshots~/phase6-polish-validation.png`.
 - For architecture proof, list owner chain for each core feature: scene/bootstrap -> system owner -> content definition -> runtime behavior.
 
 ## Do-not-touch
@@ -70,4 +77,5 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; Phase 4 explicitly wires runtime components and content references through `GameplayCompositionRoot` and scene component fields.
 - Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns tower/spawn/pool/projectile/VFX roots, `UIRoot` owns canvases, `CameraRoot` owns `Main Camera`, and `LightingRoot` owns lights.
 - Runtime owners and gameplay prefabs are wired for a runnable prototype slice.
-- Phase 5 UI presenters, HUD, game-over panel, and damage numbers are wired through `GameplayCompositionRoot`; final visual polish remains future work.
+- Phase 5 UI presenters, HUD, game-over panel, and damage numbers are wired through `GameplayCompositionRoot`.
+- Phase 6 balance/polish is implemented: generated materials are assigned to tower/enemy/fireball prefabs, `ArenaFloor` is scene-owned and visual-only, and tower HP loss is limited to collision-gated enemy contact.

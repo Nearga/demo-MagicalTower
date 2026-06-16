@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.EnemyDefinition
   displayName: Default Enemy
   maxHealth: 30
-  movementSpeed: 2
-  contactDamage: 5
-  attackInterval: 1
+  movementSpeed: 1.9
+  contactDamage: 4
+  attackInterval: 1.25
   visualScale: 1

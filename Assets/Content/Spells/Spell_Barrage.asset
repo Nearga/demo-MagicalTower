@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Spell_Barrage
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.SpellDefinition
   displayName: Barrage Spell
-  cooldown: 5
+  cooldown: 5.5
   projectileDefinition: {fileID: 11400000, guid: a62ffb2c07ce11f4dac83c2ca0552df4, type: 2}
   targetMode: 1

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.EnemyDefinition
   displayName: Fast Enemy
   maxHealth: 20
-  movementSpeed: 3.5
-  contactDamage: 3
-  attackInterval: 0.8
+  movementSpeed: 3.2
+  contactDamage: 2
+  attackInterval: 1
   visualScale: 0.8

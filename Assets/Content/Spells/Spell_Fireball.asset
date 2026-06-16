@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Spell_Fireball
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.SpellDefinition
   displayName: Fireball Spell
-  cooldown: 2.5
+  cooldown: 2.2
   projectileDefinition: {fileID: 11400000, guid: 5e5d9d03727e9a54abde0c05f4568b6c, type: 2}
   targetMode: 0

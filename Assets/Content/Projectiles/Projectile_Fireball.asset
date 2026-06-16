@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb54b7aad46352f4a98065c9c7da1a9b, type: 3}
   m_Name: Projectile_Fireball
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.ProjectileDefinition
-  damage: 25
-  speed: 8
-  impactRadius: 2
+  damage: 28
+  speed: 8.5
+  impactRadius: 2.2
   arcHeight: 0
   burningStatusEffect: {fileID: 11400000, guid: 9ccba3c162bb2d14c8ea3f7f139be7ed, type: 2}

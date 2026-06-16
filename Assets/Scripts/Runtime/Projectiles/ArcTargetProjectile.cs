@@ -62,7 +62,11 @@ namespace MagicalTower.Runtime
             }
 
             hit = true;
-            target.TakeDamage(new DamageRequest(definition.Damage, gameObject, target.transform.position));
+            var report = target.TakeDamage(new DamageRequest(definition.Damage, gameObject, target.transform.position));
+            GameLog.Info(
+                LogChannel.Damage,
+                $"Barrage dealt {report.Amount} damage to {target.Definition.DisplayName}. Fatal: {report.WasFatal}.",
+                this);
             Destroy(gameObject);
         }
     }
