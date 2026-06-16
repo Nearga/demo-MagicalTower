@@ -6,31 +6,47 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 
 ## Primary paths
 
-- Live project-owned content paths: none yet under `Assets/`.
+- Live project-owned content paths:
+  - `Assets/Scripts/Content/`
+  - `Assets/Content/Tower/`
+  - `Assets/Content/Enemies/`
+  - `Assets/Content/Spells/`
+  - `Assets/Content/Projectiles/`
+  - `Assets/Content/StatusEffects/`
+  - `Assets/Content/Spawning/`
+  - `Assets/Content/Pooling/`
 - Task brief: parent `Test Task.md`.
 - Proposed content root: `Assets/Content/`.
-- Proposed definition source root, if using C#: `Assets/Scripts/Content/` or a focused definitions folder beside runtime source.
+- Definition source root: `Assets/Scripts/Content/`.
 
 ## Runtime/source owners
 
-- No live content/runtime bridge exists yet.
-- Task-derived configurable content surfaces to create:
-  - Enemy definitions: Default Enemy, Fast Enemy, Big and Slow Enemy.
-  - Spell definitions: Fireball Spell and Barrage Spell.
-  - Spawn schedule: time-period spawn-rate and enemy mix data for gradually increasing difficulty.
-  - Tower tuning: max health and damage intake values.
-  - Status effect tuning: Burning Effect damage per tick, duration, tick interval, stacking/refresh policy.
-  - Projectile tuning: damage, speed, area radius, cooldown, parabolic arc settings where relevant.
+- Live content definition types:
+  - `TowerDefinition`
+  - `EnemyDefinition`
+  - `SpellDefinition`
+  - `ProjectileDefinition`
+  - `BurningStatusEffectDefinition`
+  - `SpawnScheduleDefinition`
+  - `EnemyPoolConfig`
+- Live content helper enums/structs:
+  - `SpellTargetMode`
+  - `StatusStackPolicy`
+  - `SpawnTimeBand`
+  - `WeightedEnemyEntry`
+- No live runtime bridge exists yet; Phase 3 runtime systems should consume these definitions.
 
 ## Data/config owners
 
-- Prefer ScriptableObjects or serialized profile assets for enemy/spell/spawn/tower/status tuning.
-- Suggested asset locations once created:
+- ScriptableObject assets are the current source of truth for enemy/spell/projectile/spawn/tower/status/pooling tuning.
+- Asset locations:
   - `Assets/Content/Enemies/`
   - `Assets/Content/Spells/`
+  - `Assets/Content/Projectiles/`
   - `Assets/Content/Spawning/`
   - `Assets/Content/Tower/`
   - `Assets/Content/StatusEffects/`
+  - `Assets/Content/Pooling/`
 - Primitive materials/particles used as source visuals can live under `Assets/Materials/` and `Assets/VFX/` unless a better project convention appears.
 
 ## Cross-module routes
@@ -41,7 +57,7 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 
 ## Validation hints
 
-- Validate every definition has runtime consumers before treating the content path as complete.
+- Before gameplay phases, validate every definition has runtime consumers before treating the content path as complete.
 - Balance changes should report exact asset/value changes.
 - For expandable-system proof, add at least one path where a new enemy or spell can be configured by creating data plus one focused behavior owner when needed.
 
@@ -53,5 +69,6 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 
 ## Open gaps
 
-- No ScriptableObjects, config assets, materials, particles, prefabs, or definitions exist yet.
-- Exact balance values are intentionally undecided; `Test Task.md` allows balancing as needed.
+- No runtime consumers exist yet for the content definitions.
+- No materials, particles, or prefabs exist yet.
+- Initial balance values exist in Phase 2 assets and can be tuned after Play Mode validation.

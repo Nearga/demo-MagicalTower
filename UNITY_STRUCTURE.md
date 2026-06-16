@@ -23,9 +23,14 @@
 - Generated/cache roots: `Library/`, `Logs/`, `UserSettings/`
 - Source-control ignore root: parent `.gitignore` at `D:\Local\Projects\Unity\Magical Tower\.gitignore`
 - Build scenes: none listed in `ProjectSettings/EditorBuildSettings.asset`.
-- Project-owned scenes, prefabs, scripts, asmdefs, and content assets: none found under `Assets/` during Teach discovery.
+- Project-owned scene: `Assets/Scenes/MagicalTowerPrototype.unity`.
+- Scene composition root: `GameRoot` with `GameplayRoot`, `UIRoot`, `CameraRoot`, and `LightingRoot` children.
+- Project-owned editor tooling: `Assets/Editor/Phase1FoundationBuilder.cs`, `Assets/Editor/Phase2ContentBuilder.cs`.
+- Project-owned content definition scripts: `Assets/Scripts/Content/`.
+- Project-owned content assets: `Assets/Content/`.
+- Project-owned asmdefs and prefabs: none currently found under `Assets/`.
 - Product/task brief: parent `Test Task.md` describes a 3D Magical Tower survivor-style prototype with enemies, configurable spawning difficulty, spells/projectiles/status effects, tower health/game over, damage numbers, and architecture/expandability as the main review focus.
-- Proposed first source roots from the task brief, not yet created: `Assets/Scripts/`, `Assets/Scenes/`, `Assets/Prefabs/`, `Assets/Content/`, `Assets/Materials/`, `Assets/VFX/`.
+- Established source roots: `Assets/Scripts/Content/`, `Assets/Scenes/`, `Assets/Content/`, `Assets/Materials/`, `Assets/Prefabs/`, `Assets/Art/Generated/Textures/`.
 
 ## Do-Not-Touch Areas
 
@@ -41,6 +46,6 @@
 
 ## Open Gaps
 
-- No runtime, UI, content, scene, prefab, or assembly ownership exists yet; the new runtime/content/UI maps are routing plans inferred from `Test Task.md`.
-- First implementation should create one gameplay scene and focused runtime/data/UI owners before adding polish.
+- Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
+- Runtime gameplay, UI presenters, prefabs, and assembly ownership still need first concrete owners.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

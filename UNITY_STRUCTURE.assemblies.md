@@ -6,16 +6,18 @@ Read this before adding new C# files, asmdefs, namespaces, modules, package refe
 
 ## Primary paths
 
-- `Assets/`: project-owned source root, currently empty.
-- Proposed from `Test Task.md`, not yet created: `Assets/Scripts/`, `Assets/Scenes/`, `Assets/Prefabs/`, `Assets/Content/`, `Assets/Materials/`, `Assets/VFX/`.
+- `Assets/`: project-owned source root.
+- `Assets/Scripts/Content/`: first project-owned runtime-facing content definition scripts.
+- `Assets/Editor/`: project-owned editor builders for Phase 1 and Phase 2 setup.
+- `Assets/Scenes/`, `Assets/Prefabs/`, `Assets/Content/`, `Assets/Materials/`, `Assets/Art/Generated/Textures/`: established project folders.
 - `Packages/manifest.json`: package dependency manifest.
 - `Packages/packages-lock.json`: resolved package lock.
 - `ProjectSettings/`: Unity project settings.
 
 ## Runtime/source owners
 
-- No project-owned runtime scripts were found under `Assets/`.
-- No project-owned editor scripts were found under `Assets/`.
+- Project-owned content definition scripts exist under `Assets/Scripts/Content/` using namespace `MagicalTower.Content`.
+- Project-owned editor scripts exist under `Assets/Editor/`.
 - Package cache scripts under `Library/PackageCache/` are dependency code, not project-owned owners.
 
 ## Data/config owners
@@ -27,7 +29,7 @@ Read this before adding new C# files, asmdefs, namespaces, modules, package refe
 ## Cross-module routes
 
 - No project-owned `.asmdef` files were found.
-- No project-owned namespaces were found.
+- Project-owned namespace: `MagicalTower.Content`.
 - Current fallback for new code: create the smallest feature-specific folder under `Assets/` that matches the concrete runtime owner being added. Do not introduce shared modules until there is a real shared caller boundary.
 - For the Magical Tower prototype, a pragmatic initial routing is a single runtime assembly or `Assembly-CSharp` with clear folders first; add asmdefs only if they reduce real coupling during implementation.
 - If asmdefs are introduced, prefer boundaries that match responsibility, for example `MagicalTower.Core`, `MagicalTower.Runtime`, `MagicalTower.Content`, and `MagicalTower.UI`. Do not add these until source files exist and the dependency direction can be validated.
@@ -46,6 +48,6 @@ Read this before adding new C# files, asmdefs, namespaces, modules, package refe
 
 ## Open gaps
 
-- First project-owned script will establish initial namespace and folder conventions.
+- First project-owned content scripts established the `MagicalTower.Content` namespace and `Assets/Scripts/Content/` folder convention.
 - First asmdef will establish assembly routing; until then, assembly boundaries are absent.
 - Suggested root namespace, if no stronger project convention appears: `MagicalTower`.

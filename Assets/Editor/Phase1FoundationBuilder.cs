@@ -13,17 +13,22 @@ public static class Phase1FoundationBuilder
 
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
-        CreateRoot("GameRoot");
-        CreatePrimitiveRoot("Tower", PrimitiveType.Cylinder, new Vector3(0f, 1f, 0f), new Vector3(1.6f, 2f, 1.6f));
-        CreateRoot("EnemySpawnRoot");
-        CreateRoot("EnemyPoolRoot");
-        CreateRoot("ProjectileRoot");
-        CreateRoot("VfxRoot");
-        CreateWorldCanvas();
-        CreateHudCanvas();
-        CreateCamera();
-        CreateLight("Directional Light", LightType.Directional, new Vector3(50f, -35f, 0f), 1.2f);
-        CreateLight("Fill Light", LightType.Point, new Vector3(-4f, 5f, -4f), 0.55f);
+        var gameRoot = CreateRoot("GameRoot");
+        var gameplayRoot = CreateRoot("GameplayRoot", gameRoot.transform);
+        var uiRoot = CreateRoot("UIRoot", gameRoot.transform);
+        var cameraRoot = CreateRoot("CameraRoot", gameRoot.transform);
+        var lightingRoot = CreateRoot("LightingRoot", gameRoot.transform);
+
+        CreatePrimitiveRoot("Tower", gameplayRoot.transform, PrimitiveType.Cylinder, new Vector3(0f, 1f, 0f), new Vector3(1.6f, 2f, 1.6f));
+        CreateRoot("EnemySpawnRoot", gameplayRoot.transform);
+        CreateRoot("EnemyPoolRoot", gameplayRoot.transform);
+        CreateRoot("ProjectileRoot", gameplayRoot.transform);
+        CreateRoot("VfxRoot", gameplayRoot.transform);
+        CreateWorldCanvas(uiRoot.transform);
+        CreateHudCanvas(uiRoot.transform);
+        CreateCamera(cameraRoot.transform);
+        CreateLight("Directional Light", lightingRoot.transform, LightType.Directional, new Vector3(50f, -35f, 0f), 1.2f);
+        CreateLight("Fill Light", lightingRoot.transform, LightType.Point, new Vector3(-4f, 5f, -4f), 0.55f);
 
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/MagicalTowerPrototype.unity");
@@ -55,26 +60,28 @@ public static class Phase1FoundationBuilder
         }
     }
 
-    private static GameObject CreateRoot(string name)
+    private static GameObject CreateRoot(string name, Transform parent = null)
     {
         var go = new GameObject(name);
+        go.transform.SetParent(parent, false);
         Undo.RegisterCreatedObjectUndo(go, $"Create {name}");
         return go;
     }
 
-    private static GameObject CreatePrimitiveRoot(string name, PrimitiveType primitiveType, Vector3 position, Vector3 scale)
+    private static GameObject CreatePrimitiveRoot(string name, Transform parent, PrimitiveType primitiveType, Vector3 position, Vector3 scale)
     {
         var go = GameObject.CreatePrimitive(primitiveType);
         go.name = name;
+        go.transform.SetParent(parent, false);
         go.transform.position = position;
         go.transform.localScale = scale;
         Undo.RegisterCreatedObjectUndo(go, $"Create {name}");
         return go;
     }
 
-    private static void CreateWorldCanvas()
+    private static void CreateWorldCanvas(Transform parent)
     {
-        var canvasGo = CreateRoot("WorldCanvas");
+        var canvasGo = CreateRoot("WorldCanvas", parent);
         var canvas = canvasGo.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
         canvasGo.AddComponent<CanvasScaler>();
@@ -86,9 +93,9 @@ public static class Phase1FoundationBuilder
         rect.sizeDelta = new Vector2(800f, 450f);
     }
 
-    private static void CreateHudCanvas()
+    private static void CreateHudCanvas(Transform parent)
     {
-        var canvasGo = CreateRoot("HudCanvas");
+        var canvasGo = CreateRoot("HudCanvas", parent);
         var canvas = canvasGo.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
@@ -100,9 +107,9 @@ public static class Phase1FoundationBuilder
         canvasGo.AddComponent<GraphicRaycaster>();
     }
 
-    private static void CreateCamera()
+    private static void CreateCamera(Transform parent)
     {
-        var go = CreateRoot("Main Camera");
+        var go = CreateRoot("Main Camera", parent);
         go.tag = "MainCamera";
         go.transform.position = new Vector3(0f, 12f, -10f);
         go.transform.rotation = Quaternion.Euler(50f, 0f, 0f);
@@ -114,9 +121,9 @@ public static class Phase1FoundationBuilder
         camera.backgroundColor = new Color(0.05f, 0.055f, 0.07f, 1f);
     }
 
-    private static void CreateLight(string name, LightType type, Vector3 positionOrEuler, float intensity)
+    private static void CreateLight(string name, Transform parent, LightType type, Vector3 positionOrEuler, float intensity)
     {
-        var go = CreateRoot(name);
+        var go = CreateRoot(name, parent);
         var light = go.AddComponent<Light>();
         light.type = type;
         light.intensity = intensity;

@@ -29,7 +29,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 ## Data/config owners
 
 - Runtime should read tuning from content definitions rather than hardcoded branches where practical.
-- Expected data inputs from `UNITY_STRUCTURE.content.md`: enemy definitions, spell definitions, spawn schedule, status effect tuning, tower tuning.
+- Expected data inputs from `UNITY_STRUCTURE.content.md`: `EnemyDefinition`, `SpellDefinition`, `ProjectileDefinition`, `SpawnScheduleDefinition`, `BurningStatusEffectDefinition`, `TowerDefinition`, and `EnemyPoolConfig` assets.
 
 ## Cross-module routes
 
@@ -53,6 +53,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 ## Open gaps
 
-- No gameplay scene exists.
+- Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; runtime components are not wired yet.
+- Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns tower/spawn/pool/projectile/VFX roots, `UIRoot` owns canvases, `CameraRoot` owns `Main Camera`, and `LightingRoot` owns lights.
 - No tower, enemy, spell, projectile, damage, status, spawn, targeting, game-over, or bootstrap owners exist yet.
-- No runtime validation has been run because no runtime source exists yet.
+- Content definitions have compiled/imported, but no Play Mode runtime validation has been run because gameplay runtime source does not exist yet.

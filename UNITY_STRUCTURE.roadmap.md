@@ -17,18 +17,18 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - `Assets/Materials`
   - `Assets/Art/Generated/Textures`
 - Create `Assets/Scenes/MagicalTowerPrototype.unity`.
-- Add root scene objects:
+- Add grouped scene hierarchy:
   - `GameRoot`
-  - `Tower`
-  - `EnemySpawnRoot`
-  - `EnemyPoolRoot`
-  - `ProjectileRoot`
-  - `VfxRoot`
-  - `WorldCanvas`
-  - `HudCanvas`
-  - `Main Camera`
-  - `Directional Light`
-  - `Fill Light`
+  - `GameRoot/GameplayRoot/Tower`
+  - `GameRoot/GameplayRoot/EnemySpawnRoot`
+  - `GameRoot/GameplayRoot/EnemyPoolRoot`
+  - `GameRoot/GameplayRoot/ProjectileRoot`
+  - `GameRoot/GameplayRoot/VfxRoot`
+  - `GameRoot/UIRoot/WorldCanvas`
+  - `GameRoot/UIRoot/HudCanvas`
+  - `GameRoot/CameraRoot/Main Camera`
+  - `GameRoot/CameraRoot/Directional Light`
+  - `GameRoot/CameraRoot/Fill Light`
 - Keep Phase 1 free of gameplay implementation code.
 
 ## Phase 2: Designer-Configurable Data
