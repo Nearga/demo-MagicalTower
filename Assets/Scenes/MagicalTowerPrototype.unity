@@ -214,7 +214,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1215076623}
+  m_Father: {fileID: 1551004772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &229767716
 GameObject:
@@ -225,6 +225,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 229767717}
+  - component: {fileID: 229767718}
   m_Layer: 0
   m_Name: EnemyPoolRoot
   m_TagString: Untagged
@@ -247,6 +248,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 257673093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &229767718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229767716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a688b6cbde0fd544089b58885e94c2b3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemyPool
+  config: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  poolRoot: {fileID: 0}
+  registry: {fileID: 0}
+  messageBus: {fileID: 0}
+  targetTower: {fileID: 0}
 --- !u!1 &257673092
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +430,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1215076623}
+  m_Father: {fileID: 1551004772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &735522448
 GameObject:
@@ -425,6 +444,8 @@ GameObject:
   - component: {fileID: 735522451}
   - component: {fileID: 735522450}
   - component: {fileID: 735522449}
+  - component: {fileID: 735522454}
+  - component: {fileID: 735522453}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -527,6 +548,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 257673093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &735522453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735522448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af10acfb4dbb2d46b61f311b811e84a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerSpellScheduler
+  spells: []
+  enemyRegistry: {fileID: 0}
+  projectileRoot: {fileID: 0}
+  messageBus: {fileID: 0}
+  viewCamera: {fileID: 0}
+--- !u!114 &735522454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735522448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2d351f218d2f8f4f859c7946d6efdc7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerHealth
+  definition: {fileID: 0}
+  messageBus: {fileID: 0}
+  gameSession: {fileID: 0}
 --- !u!1 &772293643
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,6 +620,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 989380052}
+  - component: {fileID: 989380057}
+  - component: {fileID: 989380056}
+  - component: {fileID: 989380055}
+  - component: {fileID: 989380054}
+  - component: {fileID: 989380053}
   m_Layer: 0
   m_Name: GameRoot
   m_TagString: Untagged
@@ -590,8 +648,87 @@ Transform:
   - {fileID: 257673093}
   - {fileID: 412309585}
   - {fileID: 1215076623}
+  - {fileID: 1551004772}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &989380053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989380051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f61d77e4a507704c8dc2557afd14de7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GameplayCompositionRoot
+  serviceRegistry: {fileID: 0}
+  messageBus: {fileID: 0}
+  gameSession: {fileID: 0}
+  towerHealth: {fileID: 0}
+  enemyRegistry: {fileID: 0}
+  enemyPool: {fileID: 0}
+  enemySpawner: {fileID: 0}
+  spellScheduler: {fileID: 0}
+  enemySpawnRoot: {fileID: 0}
+  enemyPoolRoot: {fileID: 0}
+  projectileRoot: {fileID: 0}
+  viewCamera: {fileID: 0}
+  towerDefinition: {fileID: 0}
+  enemyPoolConfig: {fileID: 0}
+  spawnSchedule: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  spellBindings: []
+--- !u!114 &989380054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989380051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d8844facce4b0448d1c1abf964d102, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.ActiveEnemyRegistry
+--- !u!114 &989380055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989380051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722daec5d3af285419838c512c679d33, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GameSession
+  messageBus: {fileID: 0}
+--- !u!114 &989380056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989380051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3448adce2149aad44b9258fe51477751, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.RuntimeMessageBus
+--- !u!114 &989380057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989380051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d7032a448807f4ab86698f4d7a00c1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.RuntimeServiceRegistry
 --- !u!1 &1200816757
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,6 +738,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1200816758}
+  - component: {fileID: 1200816759}
   m_Layer: 0
   m_Name: EnemySpawnRoot
   m_TagString: Untagged
@@ -623,6 +761,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 257673093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1200816759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200816757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab53cea6b84c1ff4b90959ace3fad15d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemySpawner
+  schedule: {fileID: 0}
+  enemyPool: {fileID: 0}
+  gameSession: {fileID: 0}
+  spawnRoot: {fileID: 0}
+  targetTower: {fileID: 0}
+  viewCamera: {fileID: 0}
+  fallbackSpawnRadius: 12
 --- !u!1 &1215076622
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,6 +810,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2125863364}
+  m_Father: {fileID: 989380052}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1551004771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1551004772}
+  m_Layer: 0
+  m_Name: LightingRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1551004772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551004771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
   - {fileID: 475573710}
   - {fileID: 96599503}
   m_Father: {fileID: 989380052}
@@ -717,7 +905,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -734,7 +922,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
@@ -819,7 +1007,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
@@ -836,7 +1024,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100

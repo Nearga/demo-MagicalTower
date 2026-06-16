@@ -27,6 +27,7 @@
 - Scene composition root: `GameRoot` with `GameplayRoot`, `UIRoot`, `CameraRoot`, and `LightingRoot` children.
 - Project-owned editor tooling: `Assets/Editor/Phase1FoundationBuilder.cs`, `Assets/Editor/Phase2ContentBuilder.cs`.
 - Project-owned content definition scripts: `Assets/Scripts/Content/`.
+- Project-owned runtime scripts: `Assets/Scripts/Runtime/`.
 - Project-owned content assets: `Assets/Content/`.
 - Project-owned asmdefs and prefabs: none currently found under `Assets/`.
 - Product/task brief: parent `Test Task.md` describes a 3D Magical Tower survivor-style prototype with enemies, configurable spawning difficulty, spells/projectiles/status effects, tower health/game over, damage numbers, and architecture/expandability as the main review focus.
@@ -47,5 +48,5 @@
 ## Open Gaps
 
 - Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
-- Runtime gameplay, UI presenters, prefabs, and assembly ownership still need first concrete owners.
+- Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; UI presenters, prefabs, and assembly ownership still need first concrete owners.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

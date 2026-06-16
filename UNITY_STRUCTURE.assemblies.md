@@ -8,6 +8,7 @@ Read this before adding new C# files, asmdefs, namespaces, modules, package refe
 
 - `Assets/`: project-owned source root.
 - `Assets/Scripts/Content/`: first project-owned runtime-facing content definition scripts.
+- `Assets/Scripts/Runtime/`: project-owned runtime gameplay, services, combat, spawning, spells, projectiles, and status scripts.
 - `Assets/Editor/`: project-owned editor builders for Phase 1 and Phase 2 setup.
 - `Assets/Scenes/`, `Assets/Prefabs/`, `Assets/Content/`, `Assets/Materials/`, `Assets/Art/Generated/Textures/`: established project folders.
 - `Packages/manifest.json`: package dependency manifest.
@@ -17,6 +18,7 @@ Read this before adding new C# files, asmdefs, namespaces, modules, package refe
 ## Runtime/source owners
 
 - Project-owned content definition scripts exist under `Assets/Scripts/Content/` using namespace `MagicalTower.Content`.
+- Project-owned runtime scripts exist under `Assets/Scripts/Runtime/` using namespace `MagicalTower.Runtime`.
 - Project-owned editor scripts exist under `Assets/Editor/`.
 - Package cache scripts under `Library/PackageCache/` are dependency code, not project-owned owners.
 

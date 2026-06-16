@@ -6,7 +6,16 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 ## Primary paths
 
-- Live project-owned runtime paths: none yet under `Assets/`.
+- Live project-owned runtime paths:
+  - `Assets/Scripts/Runtime/Infrastructure/`
+  - `Assets/Scripts/Runtime/Combat/`
+  - `Assets/Scripts/Runtime/Session/`
+  - `Assets/Scripts/Runtime/Tower/`
+  - `Assets/Scripts/Runtime/Enemies/`
+  - `Assets/Scripts/Runtime/Spawning/`
+  - `Assets/Scripts/Runtime/Spells/`
+  - `Assets/Scripts/Runtime/Projectiles/`
+  - `Assets/Scripts/Runtime/Status/`
 - Task brief: parent `Test Task.md`.
 - Proposed scene root: `Assets/Scenes/`.
 - Proposed runtime source root: `Assets/Scripts/Runtime/`.
@@ -14,17 +23,16 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 ## Runtime/source owners
 
-- No live runtime owners exist yet.
-- Task-derived owners to create as focused collaborators:
-  - Tower health/combat target: `Tower`, `TowerHealth`, or equivalent owner.
-  - Game/session flow: `GameSession`, `GameOverController`, or equivalent thin state owner.
-  - Enemy lifecycle: enemy component plus enemy movement/combat collaborators.
-  - Enemy spawning: spawn scheduler that reads spawn period data and instantiates enemy definitions.
-  - Target registry: active enemy registry/runtime set for spell targeting.
-  - Spell casting: tower spell scheduler using configurable spell definitions and cooldowns.
-  - Projectiles: separate fireball and barrage projectile behavior owners if their movement/impact rules differ.
-  - Damage/status: damage service or local damage receiver plus burning damage-over-time owner.
-  - Scene bootstrap/composition: one gameplay scene owner that wires data, tower, spawner, camera, and UI.
+- Live runtime owners:
+  - Scene composition/internal services: `GameplayCompositionRoot`, `RuntimeServiceRegistry`, `RuntimeMessageBus`.
+  - Game/session flow: `GameSession`.
+  - Tower health/combat target: `TowerHealth`.
+  - Enemy lifecycle: `EnemyAgent`, `EnemyMovementController`, `EnemyAttackController`.
+  - Enemy spawning/pooling: `EnemySpawner`, `EnemyPool`.
+  - Target registry: `ActiveEnemyRegistry`.
+  - Spell casting: `TowerSpellScheduler`.
+  - Projectiles: `LinearExplosiveProjectile`, `ArcTargetProjectile`.
+  - Damage/status: `IDamageReceiver`, `DamageRequest`, `DamageReport`, `StatusEffectController`.
 
 ## Data/config owners
 
@@ -55,5 +63,5 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 - Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; runtime components are not wired yet.
 - Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns tower/spawn/pool/projectile/VFX roots, `UIRoot` owns canvases, `CameraRoot` owns `Main Camera`, and `LightingRoot` owns lights.
-- No tower, enemy, spell, projectile, damage, status, spawn, targeting, game-over, or bootstrap owners exist yet.
-- Content definitions have compiled/imported, but no Play Mode runtime validation has been run because gameplay runtime source does not exist yet.
+- Runtime owners exist but are not fully wired to scene objects or prefabs yet.
+- No Play Mode gameplay validation has been run; Phase 4 must create/wire prefabs and scene references before full gameplay proof.

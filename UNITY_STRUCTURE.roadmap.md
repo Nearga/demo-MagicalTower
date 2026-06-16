@@ -27,8 +27,8 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - `GameRoot/UIRoot/WorldCanvas`
   - `GameRoot/UIRoot/HudCanvas`
   - `GameRoot/CameraRoot/Main Camera`
-  - `GameRoot/CameraRoot/Directional Light`
-  - `GameRoot/CameraRoot/Fill Light`
+  - `GameRoot/LightingRoot/Directional Light`
+  - `GameRoot/LightingRoot/Fill Light`
 - Keep Phase 1 free of gameplay implementation code.
 
 ## Phase 2: Designer-Configurable Data
