@@ -67,14 +67,21 @@ namespace MagicalTower.Runtime
 
         private bool CanSpawn()
         {
-            var canSpawn = schedule != null && enemyPool != null && gameSession != null && !gameSession.IsGameOver;
-            if (!canSpawn && !warnedMissingReferences)
+            var hasRequiredReferences =
+                schedule != null &&
+                enemyPool != null &&
+                gameSession != null &&
+                spawnRoot != null &&
+                targetTower != null &&
+                viewCamera != null;
+
+            if (!hasRequiredReferences && !warnedMissingReferences)
             {
                 Debug.LogWarning("EnemySpawner is missing required references.", this);
                 warnedMissingReferences = true;
             }
 
-            return canSpawn;
+            return hasRequiredReferences && !gameSession.IsGameOver;
         }
 
         private SpawnTimeBand? GetCurrentBand(float elapsedTime)

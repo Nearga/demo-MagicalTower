@@ -29,7 +29,8 @@
 - Project-owned content definition scripts: `Assets/Scripts/Content/`.
 - Project-owned runtime scripts: `Assets/Scripts/Runtime/`.
 - Project-owned content assets: `Assets/Content/`.
-- Project-owned asmdefs and prefabs: none currently found under `Assets/`.
+- Project-owned gameplay prefabs: `Assets/Prefabs/Gameplay/Tower.prefab`, `EnemyAgent.prefab`, `FireballProjectile.prefab`, and `BarrageProjectile.prefab`.
+- Project-owned asmdefs: none currently found under `Assets/`.
 - Product/task brief: parent `Test Task.md` describes a 3D Magical Tower survivor-style prototype with enemies, configurable spawning difficulty, spells/projectiles/status effects, tower health/game over, damage numbers, and architecture/expandability as the main review focus.
 - Established source roots: `Assets/Scripts/Content/`, `Assets/Scenes/`, `Assets/Content/`, `Assets/Materials/`, `Assets/Prefabs/`, `Assets/Art/Generated/Textures/`.
 
@@ -48,5 +49,5 @@
 ## Open Gaps
 
 - Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
-- Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; UI presenters, prefabs, and assembly ownership still need first concrete owners.
+- Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; Phase 4 gameplay prefabs and explicit scene wiring exist. UI presenters and assembly ownership still need first concrete owners.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

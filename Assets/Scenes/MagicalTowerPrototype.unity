@@ -260,12 +260,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a688b6cbde0fd544089b58885e94c2b3, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemyPool
-  config: {fileID: 0}
-  enemyPrefab: {fileID: 0}
-  poolRoot: {fileID: 0}
-  registry: {fileID: 0}
-  messageBus: {fileID: 0}
-  targetTower: {fileID: 0}
+  config: {fileID: 11400000, guid: 15ce52ae41b61624fa9f1523f14856e2, type: 2}
+  enemyPrefab: {fileID: 259133387336695461, guid: 36da35d941454f54aa006dda14cf5c7f, type: 3}
+  poolRoot: {fileID: 229767717}
+  registry: {fileID: 989380054}
+  messageBus: {fileID: 989380056}
+  targetTower: {fileID: 735522454}
 --- !u!1 &257673092
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,7 +509,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735522448}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 1335903267}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -560,11 +560,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af10acfb4dbb2d46b61f311b811e84a, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerSpellScheduler
-  spells: []
-  enemyRegistry: {fileID: 0}
-  projectileRoot: {fileID: 0}
-  messageBus: {fileID: 0}
-  viewCamera: {fileID: 0}
+  spells:
+  - definition: {fileID: 11400000, guid: 2ee69381bbe7e2c47b98dcd858a8ac31, type: 2}
+    projectilePrefab: {fileID: 6689516957272319038, guid: 0f5d698cb69ddd64e84ef1f16127edf5, type: 3}
+  - definition: {fileID: 11400000, guid: f0a5ce0b8c202914eb352184ad7aa9b2, type: 2}
+    projectilePrefab: {fileID: 3679265396906989366, guid: b4db32946154e8144a51ad851dbd1cbb, type: 3}
+  enemyRegistry: {fileID: 989380054}
+  projectileRoot: {fileID: 1614688258}
+  messageBus: {fileID: 989380056}
+  viewCamera: {fileID: 2125863363}
 --- !u!114 &735522454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -577,9 +581,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d351f218d2f8f4f859c7946d6efdc7, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerHealth
-  definition: {fileID: 0}
-  messageBus: {fileID: 0}
-  gameSession: {fileID: 0}
+  definition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
+  messageBus: {fileID: 989380056}
+  gameSession: {fileID: 989380055}
 --- !u!1 &772293643
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,23 +667,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f61d77e4a507704c8dc2557afd14de7, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GameplayCompositionRoot
-  serviceRegistry: {fileID: 0}
-  messageBus: {fileID: 0}
-  gameSession: {fileID: 0}
-  towerHealth: {fileID: 0}
-  enemyRegistry: {fileID: 0}
-  enemyPool: {fileID: 0}
-  enemySpawner: {fileID: 0}
-  spellScheduler: {fileID: 0}
-  enemySpawnRoot: {fileID: 0}
-  enemyPoolRoot: {fileID: 0}
-  projectileRoot: {fileID: 0}
-  viewCamera: {fileID: 0}
-  towerDefinition: {fileID: 0}
-  enemyPoolConfig: {fileID: 0}
-  spawnSchedule: {fileID: 0}
-  enemyPrefab: {fileID: 0}
-  spellBindings: []
+  serviceRegistry: {fileID: 989380057}
+  messageBus: {fileID: 989380056}
+  gameSession: {fileID: 989380055}
+  towerHealth: {fileID: 735522454}
+  enemyRegistry: {fileID: 989380054}
+  enemyPool: {fileID: 229767718}
+  enemySpawner: {fileID: 1200816759}
+  spellScheduler: {fileID: 735522453}
+  enemySpawnRoot: {fileID: 1200816758}
+  enemyPoolRoot: {fileID: 229767717}
+  projectileRoot: {fileID: 1614688258}
+  viewCamera: {fileID: 2125863363}
+  towerDefinition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
+  enemyPoolConfig: {fileID: 11400000, guid: 15ce52ae41b61624fa9f1523f14856e2, type: 2}
+  spawnSchedule: {fileID: 11400000, guid: 2ab983784477a1148b335d3479966fa9, type: 2}
+  enemyPrefab: {fileID: 259133387336695461, guid: 36da35d941454f54aa006dda14cf5c7f, type: 3}
+  spellBindings:
+  - definition: {fileID: 11400000, guid: 2ee69381bbe7e2c47b98dcd858a8ac31, type: 2}
+    projectilePrefab: {fileID: 6689516957272319038, guid: 0f5d698cb69ddd64e84ef1f16127edf5, type: 3}
+  - definition: {fileID: 11400000, guid: f0a5ce0b8c202914eb352184ad7aa9b2, type: 2}
+    projectilePrefab: {fileID: 3679265396906989366, guid: b4db32946154e8144a51ad851dbd1cbb, type: 3}
 --- !u!114 &989380054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,7 +712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 722daec5d3af285419838c512c679d33, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GameSession
-  messageBus: {fileID: 0}
+  messageBus: {fileID: 989380056}
 --- !u!114 &989380056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,12 +781,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab53cea6b84c1ff4b90959ace3fad15d, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemySpawner
-  schedule: {fileID: 0}
-  enemyPool: {fileID: 0}
-  gameSession: {fileID: 0}
-  spawnRoot: {fileID: 0}
-  targetTower: {fileID: 0}
-  viewCamera: {fileID: 0}
+  schedule: {fileID: 11400000, guid: 2ab983784477a1148b335d3479966fa9, type: 2}
+  enemyPool: {fileID: 229767718}
+  gameSession: {fileID: 989380055}
+  spawnRoot: {fileID: 1200816758}
+  targetTower: {fileID: 735522454}
+  viewCamera: {fileID: 2125863363}
   fallbackSpawnRadius: 12
 --- !u!1 &1215076622
 GameObject:
@@ -812,6 +820,19 @@ Transform:
   - {fileID: 2125863364}
   m_Father: {fileID: 989380052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &1335903267
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name:
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &1551004771
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - Proposed scene root: `Assets/Scenes/`.
 - Proposed runtime source root: `Assets/Scripts/Runtime/`.
 - Proposed prefab root: `Assets/Prefabs/`.
+- Live gameplay prefab root: `Assets/Prefabs/Gameplay/`.
 
 ## Runtime/source owners
 
@@ -33,6 +34,11 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - Spell casting: `TowerSpellScheduler`.
   - Projectiles: `LinearExplosiveProjectile`, `ArcTargetProjectile`.
   - Damage/status: `IDamageReceiver`, `DamageRequest`, `DamageReport`, `StatusEffectController`.
+- Live prefab owners:
+  - `Assets/Prefabs/Gameplay/Tower.prefab`
+  - `Assets/Prefabs/Gameplay/EnemyAgent.prefab`
+  - `Assets/Prefabs/Gameplay/FireballProjectile.prefab`
+  - `Assets/Prefabs/Gameplay/BarrageProjectile.prefab`
 
 ## Data/config owners
 
@@ -61,7 +67,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 ## Open gaps
 
-- Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; runtime components are not wired yet.
+- Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; Phase 4 explicitly wires runtime components and content references through `GameplayCompositionRoot` and scene component fields.
 - Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns tower/spawn/pool/projectile/VFX roots, `UIRoot` owns canvases, `CameraRoot` owns `Main Camera`, and `LightingRoot` owns lights.
-- Runtime owners exist but are not fully wired to scene objects or prefabs yet.
-- No Play Mode gameplay validation has been run; Phase 4 must create/wire prefabs and scene references before full gameplay proof.
+- Runtime owners and gameplay prefabs are wired for a runnable prototype slice.
+- UI presenters, HUD, damage numbers, and final visual feedback remain future work.

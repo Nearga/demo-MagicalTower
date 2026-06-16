@@ -39,6 +39,7 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 ## Data/config owners
 
 - ScriptableObject assets are the current source of truth for enemy/spell/projectile/spawn/tower/status/pooling tuning.
+- `Assets/Content/Pooling/EnemyPool_Default.asset` now references `Assets/Prefabs/Gameplay/EnemyAgent.prefab`.
 - Asset locations:
   - `Assets/Content/Enemies/`
   - `Assets/Content/Spells/`
@@ -69,6 +70,6 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
 
 ## Open gaps
 
-- No runtime consumers exist yet for the content definitions.
-- No materials, particles, or prefabs exist yet.
+- Runtime consumers exist under `Assets/Scripts/Runtime/` and Phase 4 gameplay prefabs consume the configured content assets.
+- No final materials, particles, UI presentation, or damage-number assets exist yet.
 - Initial balance values exist in Phase 2 assets and can be tuned after Play Mode validation.

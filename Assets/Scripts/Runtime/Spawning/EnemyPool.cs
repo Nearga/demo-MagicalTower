@@ -34,6 +34,7 @@ namespace MagicalTower.Runtime
             registry = activeRegistry;
             messageBus = bus;
             targetTower = tower;
+            Prewarm();
         }
 
         private void Awake()
@@ -42,9 +43,6 @@ namespace MagicalTower.Runtime
             {
                 poolRoot = transform;
             }
-
-            enemyPrefab = enemyPrefab != null ? enemyPrefab : ResolvePrefabFromConfig();
-            Prewarm();
         }
 
         public EnemyAgent Spawn(EnemyDefinition definition, Vector3 position, Quaternion rotation)

@@ -32,67 +32,55 @@ namespace MagicalTower.Runtime
 
         private void Awake()
         {
-            ResolveLocalFallbacks();
+            if (!ValidateRequiredReferences())
+            {
+                enabled = false;
+                return;
+            }
+
             RegisterServices();
             ConfigureRuntime();
         }
 
-        private void ResolveLocalFallbacks()
+        private bool ValidateRequiredReferences()
         {
-            if (serviceRegistry == null)
+            var isValid = true;
+
+            // Infrastructure
+            if (serviceRegistry == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(serviceRegistry)}' is not assigned.", this); isValid = false; }
+            if (messageBus     == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(messageBus)}' is not assigned.", this);     isValid = false; }
+
+            // Scene Runtime
+            if (gameSession     == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(gameSession)}' is not assigned.", this);     isValid = false; }
+            if (towerHealth     == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(towerHealth)}' is not assigned.", this);     isValid = false; }
+            if (enemyRegistry   == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemyRegistry)}' is not assigned.", this);   isValid = false; }
+            if (enemyPool       == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemyPool)}' is not assigned.", this);       isValid = false; }
+            if (enemySpawner    == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemySpawner)}' is not assigned.", this);    isValid = false; }
+            if (spellScheduler  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(spellScheduler)}' is not assigned.", this);  isValid = false; }
+
+            // Scene Roots
+            if (enemySpawnRoot  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemySpawnRoot)}' is not assigned.", this);  isValid = false; }
+            if (enemyPoolRoot   == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemyPoolRoot)}' is not assigned.", this);   isValid = false; }
+            if (projectileRoot  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(projectileRoot)}' is not assigned.", this);  isValid = false; }
+            if (viewCamera      == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(viewCamera)}' is not assigned.", this);      isValid = false; }
+
+            // Content
+            if (towerDefinition  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(towerDefinition)}' is not assigned.", this);  isValid = false; }
+            if (enemyPoolConfig  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemyPoolConfig)}' is not assigned.", this);  isValid = false; }
+            if (spawnSchedule    == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(spawnSchedule)}' is not assigned.", this);    isValid = false; }
+            if (enemyPrefab      == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemyPrefab)}' is not assigned.", this);      isValid = false; }
+
+            if (spellBindings == null || spellBindings.Length == 0)
             {
-                serviceRegistry = GetComponentInChildren<RuntimeServiceRegistry>(true);
+                Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(spellBindings)}' is not assigned or empty.", this);
+                isValid = false;
             }
 
-            if (messageBus == null)
-            {
-                messageBus = GetComponentInChildren<RuntimeMessageBus>(true);
-            }
-
-            if (gameSession == null)
-            {
-                gameSession = GetComponentInChildren<GameSession>(true);
-            }
-
-            if (towerHealth == null)
-            {
-                towerHealth = GetComponentInChildren<TowerHealth>(true);
-            }
-
-            if (enemyRegistry == null)
-            {
-                enemyRegistry = GetComponentInChildren<ActiveEnemyRegistry>(true);
-            }
-
-            if (enemyPool == null)
-            {
-                enemyPool = GetComponentInChildren<EnemyPool>(true);
-            }
-
-            if (enemySpawner == null)
-            {
-                enemySpawner = GetComponentInChildren<EnemySpawner>(true);
-            }
-
-            if (spellScheduler == null)
-            {
-                spellScheduler = GetComponentInChildren<TowerSpellScheduler>(true);
-            }
-
-            if (viewCamera == null)
-            {
-                viewCamera = GetComponentInChildren<Camera>(true);
-            }
+            return isValid;
         }
 
         private void RegisterServices()
         {
-            if (serviceRegistry == null)
-            {
-                Debug.LogWarning("GameplayCompositionRoot has no RuntimeServiceRegistry assigned.", this);
-                return;
-            }
-
             serviceRegistry.Clear();
             serviceRegistry.Register(serviceRegistry);
             RegisterIfAssigned(messageBus);

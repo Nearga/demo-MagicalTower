@@ -80,16 +80,15 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - `EnemyAgent.prefab`
   - `FireballProjectile.prefab`
   - `BarrageProjectile.prefab`
-  - `DamageNumber.prefab`
-  - optional primitive VFX prefabs.
 - Wire references in the editor:
-  - `GameSession` references tower/session UI.
-  - `EnemySpawner` references spawn schedule, enemy pool, target tower, enemy registry, and `EnemySpawnRoot`.
-  - `EnemyPool` references enemy prefab, initial capacity, max capacity, and `EnemyPoolRoot`.
+  - `GameplayCompositionRoot` references registry, message bus, session, tower, pool, spawner, spell scheduler, roots, camera, content assets, enemy prefab, and spell bindings.
+  - `GameSession` references the runtime message bus.
+  - `EnemySpawner` references spawn schedule, enemy pool, game session, target tower, camera, and `EnemySpawnRoot`.
+  - `EnemyPool` references enemy pool config, enemy prefab, registry, message bus, target tower, and `EnemyPoolRoot`.
   - `EnemyAgent` returns itself to `EnemyPool` on death or despawn.
-  - `TowerSpellScheduler` references spell definitions, projectile roots, and enemy registry.
+  - `TowerSpellScheduler` references spell definitions, projectile prefabs, projectile root, message bus, camera, and enemy registry.
   - Projectile prefabs reference projectile definitions and damage/status settings.
-  - UI presenters subscribe to assigned runtime components/events.
+- Keep UI presenters, HUD, damage numbers, and final feedback for Phase 5.
 - The scene acts as the designer-editable composition root; code should not construct the whole scene procedurally.
 
 ## Phase 5: UI And Feedback
@@ -134,9 +133,23 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - Barrage fires one arcing projectile per visible enemy
   - damage numbers appear for enemies and tower
   - spawn pressure increases over time.
+- Add per-feature debug logging system:
+  - create `Assets/Scripts/Runtime/Utility/GameLog.cs` — static wrapper with `[Conditional("UNITY_EDITOR")]` so all calls strip from production builds at zero cost.
+  - define `LogChannel` enum with one entry per feature area (e.g. `Damage`, `Spawning`, `Pooling`, `Spells`, `Session`).
+  - enable/disable channels with a `HashSet<LogChannel>`; toggling a single line is enough to silence or expose a feature's logs.
+  - pass `Object context` to all call sites so clicking a console entry pings the relevant GameObject in the Hierarchy.
+  - wire `LogChannel.Damage` call sites into damage-dealing paths (projectile hits, burning ticks, tower contact damage) as the first use case.
 
 ## Phase 1 Status
 
 - Status: in progress.
 - Runtime code: intentionally not started.
 - Enemy pooling: required for Phase 3 and Phase 4; not implemented in Phase 1.
+
+## Phase 4 Status
+
+- Status: implemented.
+- Runtime composition is explicit-wiring only; `GameplayCompositionRoot` does not search child hierarchy for missing references.
+- Gameplay prefabs exist under `Assets/Prefabs/Gameplay/`.
+- `MagicalTowerPrototype.unity` is wired for a runnable prototype slice.
+- UI, HUD, damage numbers, final materials, and polish remain for later phases.

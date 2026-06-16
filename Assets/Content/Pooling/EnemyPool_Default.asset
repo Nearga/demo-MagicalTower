@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 116d38e6f96bf3246aa8482586829ac7, type: 3}
   m_Name: EnemyPool_Default
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.EnemyPoolConfig
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 6968382133557434523, guid: 36da35d941454f54aa006dda14cf5c7f, type: 3}
   initialCapacity: 12
   maxCapacity: 60
