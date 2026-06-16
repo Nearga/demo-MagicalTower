@@ -1,6 +1,7 @@
 using System;
 using MagicalTower.Content;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
@@ -8,11 +9,12 @@ namespace MagicalTower.Runtime
     {
         [SerializeField] private EnemyDefinition definition;
         [SerializeField] private ActiveEnemyRegistry registry;
-        [SerializeField] private RuntimeMessageBus messageBus;
         [SerializeField] private EnemyPool owningPool;
         [SerializeField] private EnemyMovementController movementController;
         [SerializeField] private EnemyAttackController attackController;
         [SerializeField] private StatusEffectController statusEffectController;
+
+        private RuntimeMessageBus messageBus;
 
         public event Action<EnemyAgent> Defeated;
 
@@ -25,19 +27,23 @@ namespace MagicalTower.Runtime
             EnemyDefinition enemyDefinition,
             TowerHealth targetTower,
             ActiveEnemyRegistry activeRegistry,
-            RuntimeMessageBus bus,
             EnemyPool pool)
         {
             definition = enemyDefinition;
             registry = activeRegistry;
-            messageBus = bus;
             owningPool = pool;
 
             EnsureCollaborators();
             ResetFromDefinition();
             movementController?.Configure(this, targetTower != null ? targetTower.transform : null);
             attackController?.Configure(this, targetTower);
-            statusEffectController?.Configure(this, messageBus);
+            statusEffectController?.Configure(this);
+        }
+
+        [Inject]
+        public void Construct(RuntimeMessageBus bus)
+        {
+            messageBus = bus;
         }
 
         private void Awake()
@@ -47,6 +53,11 @@ namespace MagicalTower.Runtime
 
         private void OnEnable()
         {
+            if (definition == null)
+            {
+                return;
+            }
+
             ResetFromDefinition();
             registry?.Register(this);
             messageBus?.Publish(new EnemySpawnedMessage(this));

@@ -26,7 +26,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 ## Runtime/source owners
 
 - Live runtime owners:
-  - Scene composition/internal services: `GameplayCompositionRoot`, `RuntimeServiceRegistry`, `RuntimeMessageBus`.
+  - Scene composition/internal services: `GameplayCompositionRoot` as a VContainer `LifetimeScope`, `RuntimeMessageBus`.
   - Game/session flow: `GameSession`.
   - Tower health/combat target: `TowerHealth`.
   - Enemy lifecycle: `EnemyAgent`, `EnemyMovementController`, `EnemyAttackController`.
@@ -54,7 +54,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - `LinearExplosiveProjectile` ignores `TowerHealth` colliders/receivers so tower-cast fireballs cannot damage the tower.
 - Phase 7 VFX ownership:
   - `LinearExplosiveProjectile` spawns `FireNovaEffect` at impact using `ProjectileDefinition.ImpactRadius` as the visual radius.
-  - `GameplayCompositionRoot` passes scene `VfxRoot` through `TowerSpellScheduler` into linear projectiles for transient explosion parenting.
+  - `TowerSpellScheduler` owns the scene `VfxRoot` reference for transient explosion parenting.
   - `StatusEffectController` owns burning visual lifecycle, instantiating one `BurningStatusVisual` while `BurningRoutine` is active and cleaning it up on refresh, expiry, disable, death, or pool return.
 
 ## Cross-module routes
@@ -62,7 +62,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - Runtime systems should communicate through small interfaces/events where this prevents sibling feature coupling.
 - Enemy, tower, spell, projectile, and UI code should not directly own each other's internals.
 - Damage numbers and health display should receive events or presentation DTOs from runtime owners, not poll global state from unrelated scripts.
-- Keep scene composition/bootstrap responsible for wiring references; avoid static global managers unless a task proves they are needed.
+- Keep scene composition/bootstrap responsible for wiring references; use VContainer for obvious shared runtime services and avoid static global managers unless a task proves they are needed.
 
 ## Validation hints
 
@@ -81,8 +81,8 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 ## Open gaps
 
-- Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; Phase 4 explicitly wires runtime components and content references through `GameplayCompositionRoot` and scene component fields.
-- Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns tower/spawn/pool/projectile/VFX roots, `UIRoot` owns canvases, `CameraRoot` owns `Main Camera`, and `LightingRoot` owns lights.
+- Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; Phase 4 explicitly wires runtime components and content references through scene component fields. `GameplayCompositionRoot` is now a VContainer `LifetimeScope` installer only; runtime components own their local content/root/camera fields and shared dependencies are injected. `RuntimeMessageBus` consumers receive it through VContainer injection only; do not reintroduce serialized bus fields or manual bus parameters.
+- Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns `Tower`, `EnemiesRoot`, `ProjectileRoot`, `VfxRoot`, and `ArenaFloor`; `EnemiesRoot` owns `ActiveEnemyRegistry`, `EnemySpawner`, and `EnemyPool`, with `EnemySpawnRoot` and `EnemyPoolRoot` as child container transforms; `UIRoot` owns canvases; `CameraRoot` owns `Main Camera` and lights.
 - Runtime owners and gameplay prefabs are wired for a runnable prototype slice.
 - Phase 5 UI presenters, HUD, game-over panel, and damage numbers are wired through `GameplayCompositionRoot`.
 - Phase 6 balance/polish is implemented: generated materials are assigned to tower/enemy/fireball prefabs, `ArenaFloor` is scene-owned and visual-only, and tower HP loss is limited to collision-gated enemy contact.

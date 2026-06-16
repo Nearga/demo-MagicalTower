@@ -155,4 +155,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.ArcTargetProjectile
   definition: {fileID: 11400000, guid: a62ffb2c07ce11f4dac83c2ca0552df4, type: 2}
   target: {fileID: 0}
-  messageBus: {fileID: 0}

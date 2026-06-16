@@ -24,7 +24,7 @@
 - Source-control ignore root: parent `.gitignore` at `D:\Local\Projects\Unity\Magical Tower\.gitignore`
 - Build scenes: none listed in `ProjectSettings/EditorBuildSettings.asset`.
 - Project-owned scene: `Assets/Scenes/MagicalTowerPrototype.unity`.
-- Scene composition root: `GameRoot` with `GameplayRoot`, `UIRoot`, `CameraRoot`, and `LightingRoot` children.
+- Scene composition root: `GameRoot` with `GameplayRoot`, `UIRoot`, and `CameraRoot` children. Under `GameplayRoot`, enemy runtime services are grouped on `EnemiesRoot` with `EnemySpawnRoot` and `EnemyPoolRoot` as child container transforms.
 - Project-owned editor tooling: `Assets/Editor/Phase1FoundationBuilder.cs`, `Assets/Editor/Phase2ContentBuilder.cs`.
 - Project-owned content definition scripts: `Assets/Scripts/Content/`.
 - Project-owned runtime scripts: `Assets/Scripts/Runtime/`.
@@ -37,6 +37,8 @@
   - Generated textures: `Assets/Art/Generated/Textures/`
   - Materials: `Assets/Materials/`
   - Validation screenshots: `Assets/Screenshots~/`
+- Runtime DI dependency:
+  - VContainer package: `jp.hadashikick.vcontainer` from `Packages/manifest.json`
 - Phase 7 VFX assets:
   - Fire/burning materials: `Assets/Materials/FireNova_Flame.mat`, `Assets/Materials/BurningEnemy_Flame.mat`
   - Runtime VFX prefabs: `Assets/Prefabs/Gameplay/FireNovaEffect.prefab`, `Assets/Prefabs/Gameplay/BurningEnemyEffect.prefab`
@@ -59,5 +61,6 @@
 - Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
 - Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; Phase 4 gameplay prefabs and explicit scene wiring exist. Phase 5 UI presenters and damage-number prefab exist under `Assets/Scripts/UI/` and `Assets/Prefabs/UI/`. Assembly ownership still needs a first concrete owner.
 - Phase 6 added editor-only runtime logging under `Assets/Scripts/Runtime/Utility/`, collision-gated enemy contact damage, tuned content assets, generated material textures, and a scene-owned `ArenaFloor` visual plane.
+- Runtime bootstrap now uses VContainer through `GameplayCompositionRoot` as a scene `LifetimeScope`; the former custom `RuntimeServiceRegistry` has been removed.
 - Phase 7 added DOTween-driven fire nova and burning enemy VFX through focused runtime owners under `Assets/Scripts/Runtime/Projectiles/` and `Assets/Scripts/Runtime/Status/`.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

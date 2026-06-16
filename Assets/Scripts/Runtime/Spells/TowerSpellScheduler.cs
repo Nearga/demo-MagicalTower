@@ -2,36 +2,28 @@ using System;
 using System.Collections.Generic;
 using MagicalTower.Content;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 namespace MagicalTower.Runtime
 {
     public sealed class TowerSpellScheduler : MonoBehaviour
     {
         [SerializeField] private SpellCastBinding[] spells = Array.Empty<SpellCastBinding>();
-        [SerializeField] private ActiveEnemyRegistry enemyRegistry;
         [SerializeField] private Transform projectileRoot;
         [SerializeField] private Transform vfxRoot;
-        [SerializeField] private RuntimeMessageBus messageBus;
         [SerializeField] private Camera viewCamera;
 
         private readonly List<EnemyAgent> visibleEnemies = new List<EnemyAgent>();
         private float[] cooldowns = Array.Empty<float>();
+        private IObjectResolver objectResolver;
+        private ActiveEnemyRegistry enemyRegistry;
 
-        public void Configure(
-            SpellCastBinding[] spellBindings,
-            ActiveEnemyRegistry registry,
-            Transform root,
-            Transform effectsRoot,
-            RuntimeMessageBus bus,
-            Camera camera)
+        [Inject]
+        public void Construct(IObjectResolver resolver, ActiveEnemyRegistry registry)
         {
-            spells = spellBindings ?? Array.Empty<SpellCastBinding>();
+            objectResolver = resolver;
             enemyRegistry = registry;
-            projectileRoot = root;
-            vfxRoot = effectsRoot;
-            messageBus = bus;
-            viewCamera = camera;
-            EnsureCooldowns();
         }
 
         private void Awake()
@@ -93,10 +85,12 @@ namespace MagicalTower.Runtime
                 direction = transform.forward;
             }
 
-            var instance = Instantiate(spell.ProjectilePrefab, start, Quaternion.LookRotation(direction.normalized), projectileRoot);
+            var instance = objectResolver != null
+                ? objectResolver.Instantiate(spell.ProjectilePrefab, start, Quaternion.LookRotation(direction.normalized), projectileRoot)
+                : Instantiate(spell.ProjectilePrefab, start, Quaternion.LookRotation(direction.normalized), projectileRoot);
             if (instance.TryGetComponent<LinearExplosiveProjectile>(out var projectile))
             {
-                projectile.Configure(spell.Definition.ProjectileDefinition, direction.normalized, messageBus, vfxRoot);
+                projectile.Configure(spell.Definition.ProjectileDefinition, direction.normalized, vfxRoot);
             }
         }
 
@@ -114,11 +108,13 @@ namespace MagicalTower.Runtime
                 var start = transform.position;
                 var direction = enemy.transform.position - start;
                 var rotation = direction.sqrMagnitude > 0.001f ? Quaternion.LookRotation(direction.normalized) : Quaternion.identity;
-                var instance = Instantiate(spell.ProjectilePrefab, start, rotation, projectileRoot);
+                var instance = objectResolver != null
+                    ? objectResolver.Instantiate(spell.ProjectilePrefab, start, rotation, projectileRoot)
+                    : Instantiate(spell.ProjectilePrefab, start, rotation, projectileRoot);
 
                 if (instance.TryGetComponent<ArcTargetProjectile>(out var projectile))
                 {
-                    projectile.Configure(spell.Definition.ProjectileDefinition, enemy, messageBus);
+                    projectile.Configure(spell.Definition.ProjectileDefinition, enemy);
                 }
             }
         }

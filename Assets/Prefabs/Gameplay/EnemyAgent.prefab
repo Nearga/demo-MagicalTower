@@ -132,7 +132,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.EnemyAgent
   definition: {fileID: 0}
   registry: {fileID: 0}
-  messageBus: {fileID: 0}
   owningPool: {fileID: 0}
   movementController: {fileID: 5882909969253848503}
   attackController: {fileID: 8369782340217972742}

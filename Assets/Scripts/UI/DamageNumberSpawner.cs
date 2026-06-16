@@ -1,6 +1,7 @@
 using System;
 using MagicalTower.Runtime;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.UI
 {
@@ -28,7 +29,8 @@ namespace MagicalTower.UI
         private IDisposable damageSubscription;
         private IDisposable burningSubscription;
 
-        public void Configure(Camera camera, RuntimeMessageBus messageBus)
+        [Inject]
+        public void Construct(Camera camera, RuntimeMessageBus messageBus)
         {
             viewCamera          = camera;
             canvasRect          = GetComponent<RectTransform>();

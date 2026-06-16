@@ -154,7 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.LinearExplosiveProjectile
   definition: {fileID: 11400000, guid: 5e5d9d03727e9a54abde0c05f4568b6c, type: 2}
-  messageBus: {fileID: 0}
   explosionEffectPrefab: {fileID: 711741597634014309, guid: 29566c3060512ef48865ab49bb643b04, type: 3}
   damageMask:
     serializedVersion: 2

@@ -7,18 +7,16 @@ namespace MagicalTower.Runtime
     {
         [SerializeField] private ProjectileDefinition definition;
         [SerializeField] private EnemyAgent target;
-        [SerializeField] private RuntimeMessageBus messageBus;
 
         private Vector3 startPosition;
         private float travelTime;
         private float elapsed;
         private bool hit;
 
-        public void Configure(ProjectileDefinition projectileDefinition, EnemyAgent targetEnemy, RuntimeMessageBus bus)
+        public void Configure(ProjectileDefinition projectileDefinition, EnemyAgent targetEnemy)
         {
             definition = projectileDefinition;
             target = targetEnemy;
-            messageBus = bus;
             startPosition = transform.position;
             elapsed = 0f;
             hit = false;

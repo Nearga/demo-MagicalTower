@@ -1,35 +1,28 @@
 using MagicalTower.Content;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
     public sealed class EnemySpawner : MonoBehaviour
     {
         [SerializeField] private SpawnScheduleDefinition schedule;
-        [SerializeField] private EnemyPool enemyPool;
-        [SerializeField] private GameSession gameSession;
         [SerializeField] private Transform spawnRoot;
-        [SerializeField] private TowerHealth targetTower;
         [SerializeField] private Camera viewCamera;
         [SerializeField] private float fallbackSpawnRadius = 12f;
 
+        private EnemyPool enemyPool;
+        private GameSession gameSession;
+        private TowerHealth targetTower;
         private float spawnTimer;
         private bool warnedMissingReferences;
 
-        public void Configure(
-            SpawnScheduleDefinition spawnSchedule,
-            EnemyPool pool,
-            GameSession session,
-            Transform root,
-            TowerHealth tower,
-            Camera camera)
+        [Inject]
+        public void Construct(EnemyPool pool, GameSession session, TowerHealth tower)
         {
-            schedule = spawnSchedule;
             enemyPool = pool;
             gameSession = session;
-            spawnRoot = root;
             targetTower = tower;
-            viewCamera = camera;
         }
 
         private void Update()

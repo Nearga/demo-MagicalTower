@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using MagicalTower.Content;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 namespace MagicalTower.Runtime
 {
@@ -9,31 +11,24 @@ namespace MagicalTower.Runtime
         [SerializeField] private EnemyPoolConfig config;
         [SerializeField] private EnemyAgent enemyPrefab;
         [SerializeField] private Transform poolRoot;
-        [SerializeField] private ActiveEnemyRegistry registry;
-        [SerializeField] private RuntimeMessageBus messageBus;
-        [SerializeField] private TowerHealth targetTower;
 
         private readonly Queue<EnemyAgent> inactiveEnemies = new Queue<EnemyAgent>();
+        private IObjectResolver objectResolver;
+        private ActiveEnemyRegistry registry;
+        private TowerHealth targetTower;
         private int createdCount;
         private bool warnedMissingPrefab;
 
         private int InitialCapacity => config != null ? config.InitialCapacity : 0;
         private int MaxCapacity => config != null ? config.MaxCapacity : 50;
 
-        public void Configure(
-            EnemyPoolConfig poolConfig,
-            EnemyAgent prefab,
-            Transform root,
-            ActiveEnemyRegistry activeRegistry,
-            RuntimeMessageBus bus,
-            TowerHealth tower)
+        [Inject]
+        public void Construct(IObjectResolver resolver, ActiveEnemyRegistry activeRegistry, TowerHealth tower)
         {
-            config = poolConfig;
-            enemyPrefab = prefab != null ? prefab : ResolvePrefabFromConfig();
-            poolRoot = root;
+            objectResolver = resolver;
             registry = activeRegistry;
-            messageBus = bus;
             targetTower = tower;
+            enemyPrefab = enemyPrefab != null ? enemyPrefab : ResolvePrefabFromConfig();
             Prewarm();
         }
 
@@ -60,7 +55,7 @@ namespace MagicalTower.Runtime
 
             enemy.transform.SetParent(poolRoot, true);
             enemy.transform.SetPositionAndRotation(position, rotation);
-            enemy.Configure(definition, targetTower, registry, messageBus, this);
+            enemy.Configure(definition, targetTower, registry, this);
             enemy.gameObject.SetActive(true);
             GameLog.Info(LogChannel.Pooling, $"Activated pooled {definition.DisplayName}.", enemy);
             return enemy;
@@ -126,7 +121,9 @@ namespace MagicalTower.Runtime
                 return null;
             }
 
-            var enemy = Instantiate(enemyPrefab, poolRoot);
+            var enemy = objectResolver != null
+                ? objectResolver.Instantiate(enemyPrefab, poolRoot)
+                : Instantiate(enemyPrefab, poolRoot);
             enemy.gameObject.SetActive(false);
             createdCount++;
             GameLog.Info(LogChannel.Pooling, $"Created enemy pool instance {createdCount}/{MaxCapacity}.", enemy);

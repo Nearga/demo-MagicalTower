@@ -1,6 +1,7 @@
 using System;
 using MagicalTower.Runtime;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.UI
 {
@@ -10,7 +11,8 @@ namespace MagicalTower.UI
 
         private IDisposable destroyedSubscription;
 
-        public void Configure(RuntimeMessageBus messageBus)
+        [Inject]
+        public void Construct(RuntimeMessageBus messageBus)
         {
             destroyedSubscription = messageBus.Subscribe<TowerDestroyedMessage>(OnTowerDestroyed);
         }

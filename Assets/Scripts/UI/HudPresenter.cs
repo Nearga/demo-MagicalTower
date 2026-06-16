@@ -3,6 +3,7 @@ using MagicalTower.Runtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace MagicalTower.UI
 {
@@ -18,7 +19,8 @@ namespace MagicalTower.UI
         private GameSession gameSession;
         private IDisposable healthSubscription;
 
-        public void Configure(GameSession session, RuntimeMessageBus messageBus)
+        [Inject]
+        public void Construct(GameSession session, RuntimeMessageBus messageBus)
         {
             gameSession = session;
             healthSubscription = messageBus.Subscribe<TowerHealthChangedMessage>(OnTowerHealthChanged);

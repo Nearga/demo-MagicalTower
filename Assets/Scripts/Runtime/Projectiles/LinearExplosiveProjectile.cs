@@ -6,7 +6,6 @@ namespace MagicalTower.Runtime
     public sealed class LinearExplosiveProjectile : MonoBehaviour
     {
         [SerializeField] private ProjectileDefinition definition;
-        [SerializeField] private RuntimeMessageBus messageBus;
         [SerializeField] private FireNovaEffect explosionEffectPrefab;
         [SerializeField] private LayerMask damageMask = ~0;
         [SerializeField] private float lifetime = 5f;
@@ -19,12 +18,10 @@ namespace MagicalTower.Runtime
         public void Configure(
             ProjectileDefinition projectileDefinition,
             Vector3 flyDirection,
-            RuntimeMessageBus bus,
             Transform effectsRoot)
         {
             definition = projectileDefinition;
             direction = flyDirection.sqrMagnitude > 0.001f ? flyDirection.normalized : transform.forward;
-            messageBus = bus;
             vfxRoot = effectsRoot;
             age = 0f;
             exploded = false;

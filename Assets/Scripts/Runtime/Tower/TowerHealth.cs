@@ -1,15 +1,16 @@
 using System;
 using MagicalTower.Content;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
     public sealed class TowerHealth : MonoBehaviour, IDamageReceiver
     {
         [SerializeField] private TowerDefinition definition;
-        [SerializeField] private RuntimeMessageBus messageBus;
-        [SerializeField] private GameSession gameSession;
 
+        private RuntimeMessageBus messageBus;
+        private GameSession gameSession;
         private bool initialized;
 
         public event Action<int, int> HealthChanged;
@@ -20,12 +21,11 @@ namespace MagicalTower.Runtime
         public bool IsAlive => initialized && CurrentHealth > 0;
         public Transform Transform => transform;
 
-        public void Configure(TowerDefinition towerDefinition, RuntimeMessageBus bus, GameSession session)
+        [Inject]
+        public void Construct(RuntimeMessageBus bus, GameSession session)
         {
-            definition = towerDefinition;
             messageBus = bus;
             gameSession = session;
-            InitializeHealth();
         }
 
         private void Awake()

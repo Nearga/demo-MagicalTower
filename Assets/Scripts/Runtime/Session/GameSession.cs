@@ -1,18 +1,20 @@
 using System;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
     public sealed class GameSession : MonoBehaviour
     {
-        [SerializeField] private RuntimeMessageBus messageBus;
-
         public event Action GameOver;
+
+        private RuntimeMessageBus messageBus;
 
         public float ElapsedTime { get; private set; }
         public bool IsGameOver { get; private set; }
 
-        public void Configure(RuntimeMessageBus bus)
+        [Inject]
+        public void Construct(RuntimeMessageBus bus)
         {
             messageBus = bus;
         }

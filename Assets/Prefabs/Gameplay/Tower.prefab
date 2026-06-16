@@ -129,7 +129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerHealth
   definition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
-  messageBus: {fileID: 0}
   gameSession: {fileID: 0}
 --- !u!114 &5659717425589697244
 MonoBehaviour:
@@ -150,5 +149,4 @@ MonoBehaviour:
     projectilePrefab: {fileID: 3679265396906989366, guid: b4db32946154e8144a51ad851dbd1cbb, type: 3}
   enemyRegistry: {fileID: 0}
   projectileRoot: {fileID: 0}
-  messageBus: {fileID: 0}
   viewCamera: {fileID: 0}

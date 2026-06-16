@@ -1,6 +1,7 @@
 using System.Collections;
 using MagicalTower.Content;
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
@@ -25,11 +26,16 @@ namespace MagicalTower.Runtime
             StopBurningVisual();
         }
 
-        public void Configure(IDamageReceiver receiver, RuntimeMessageBus bus)
+        public void Configure(IDamageReceiver receiver)
         {
             damageReceiver        = receiver;
             damageReceiverSource  = receiver as MonoBehaviour;
-            messageBus            = bus;
+        }
+
+        [Inject]
+        public void Construct(RuntimeMessageBus bus)
+        {
+            messageBus = bus;
         }
 
         public void ApplyBurning(BurningStatusEffectDefinition definition, GameObject source)
