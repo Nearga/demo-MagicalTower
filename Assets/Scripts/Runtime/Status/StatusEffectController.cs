@@ -9,6 +9,7 @@ namespace MagicalTower.Runtime
         [SerializeField] private MonoBehaviour damageReceiverSource;
 
         private IDamageReceiver damageReceiver;
+        private RuntimeMessageBus messageBus;
         private Coroutine burningRoutine;
 
         private void Awake()
@@ -16,10 +17,11 @@ namespace MagicalTower.Runtime
             damageReceiver = damageReceiverSource as IDamageReceiver;
         }
 
-        public void Configure(IDamageReceiver receiver)
+        public void Configure(IDamageReceiver receiver, RuntimeMessageBus bus)
         {
-            damageReceiver = receiver;
-            damageReceiverSource = receiver as MonoBehaviour;
+            damageReceiver        = receiver;
+            damageReceiverSource  = receiver as MonoBehaviour;
+            messageBus            = bus;
         }
 
         public void ApplyBurning(BurningStatusEffectDefinition definition, GameObject source)
@@ -47,7 +49,17 @@ namespace MagicalTower.Runtime
 
                 if (damageReceiver.IsAlive)
                 {
-                    damageReceiver.TakeDamage(new DamageRequest(definition.DamagePerTick, source, transform.position));
+                    var tickPosition = (damageReceiverSource != null)
+                        ? damageReceiverSource.transform.position
+                        : Vector3.zero;
+
+                    damageReceiver.TakeDamage(new DamageRequest(definition.DamagePerTick, source, tickPosition));
+
+                    // Separate message so UI can color burning ticks distinctly
+                    if (messageBus != null && damageReceiver is EnemyAgent enemy)
+                    {
+                        messageBus.Publish(new BurningTickMessage(enemy, definition.DamagePerTick, tickPosition));
+                    }
                 }
             }
 

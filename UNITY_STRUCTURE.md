@@ -49,5 +49,5 @@
 ## Open Gaps
 
 - Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
-- Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; Phase 4 gameplay prefabs and explicit scene wiring exist. UI presenters and assembly ownership still need first concrete owners.
+- Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; Phase 4 gameplay prefabs and explicit scene wiring exist. Phase 5 UI presenters and damage-number prefab exist under `Assets/Scripts/UI/` and `Assets/Prefabs/UI/`. Assembly ownership still needs a first concrete owner.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

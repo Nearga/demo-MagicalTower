@@ -1,4 +1,5 @@
 using MagicalTower.Content;
+using MagicalTower.UI;
 using UnityEngine;
 
 namespace MagicalTower.Runtime
@@ -29,6 +30,11 @@ namespace MagicalTower.Runtime
         [SerializeField] private SpawnScheduleDefinition spawnSchedule;
         [SerializeField] private EnemyAgent enemyPrefab;
         [SerializeField] private SpellCastBinding[] spellBindings;
+
+        [Header("UI")]
+        [SerializeField] private HudPresenter hudPresenter;
+        [SerializeField] private GameOverPresenter gameOverPresenter;
+        [SerializeField] private DamageNumberSpawner damageNumberSpawner;
 
         private void Awake()
         {
@@ -76,6 +82,11 @@ namespace MagicalTower.Runtime
                 isValid = false;
             }
 
+            // UI
+            if (hudPresenter         == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(hudPresenter)}' is not assigned.", this);         isValid = false; }
+            if (gameOverPresenter     == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(gameOverPresenter)}' is not assigned.", this);     isValid = false; }
+            if (damageNumberSpawner   == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(damageNumberSpawner)}' is not assigned.", this);   isValid = false; }
+
             return isValid;
         }
 
@@ -99,6 +110,9 @@ namespace MagicalTower.Runtime
             enemyPool?.Configure(enemyPoolConfig, enemyPrefab, enemyPoolRoot, enemyRegistry, messageBus, towerHealth);
             enemySpawner?.Configure(spawnSchedule, enemyPool, gameSession, enemySpawnRoot, towerHealth, viewCamera);
             spellScheduler?.Configure(spellBindings, enemyRegistry, projectileRoot, messageBus, viewCamera);
+            hudPresenter?.Configure(gameSession, messageBus);
+            gameOverPresenter?.Configure(messageBus);
+            damageNumberSpawner?.Configure(viewCamera, messageBus);
         }
 
         private void RegisterIfAssigned<T>(T service) where T : class

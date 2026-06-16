@@ -57,4 +57,18 @@ namespace MagicalTower.Runtime
         public EnemyAgent Enemy { get; }
         public GameObject Source { get; }
     }
+
+    public readonly struct BurningTickMessage
+    {
+        public BurningTickMessage(EnemyAgent target, int amount, Vector3 worldPosition)
+        {
+            Target        = target;
+            Amount        = amount;
+            WorldPosition = worldPosition;
+        }
+
+        public EnemyAgent Target        { get; }
+        public int        Amount        { get; }
+        public Vector3    WorldPosition { get; }
+    }
 }

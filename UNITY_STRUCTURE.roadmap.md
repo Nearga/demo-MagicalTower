@@ -140,6 +140,15 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - pass `Object context` to all call sites so clicking a console entry pings the relevant GameObject in the Hierarchy.
   - wire `LogChannel.Damage` call sites into damage-dealing paths (projectile hits, burning ticks, tower contact damage) as the first use case.
 
+## Phase 8: Replayability
+
+- Implement full game loop: play → game over → restart → play.
+- Add a Restart button to the game-over panel.
+- On restart, reload the active scene (`SceneManager.LoadScene`) to reset all runtime state.
+- Ensure `GameSession`, `TowerHealth`, enemy pool, and spawn schedule all reset correctly on scene load.
+- Consider a lightweight `SceneLoader` helper (`MonoBehaviour`) to own the scene reload call, keeping presenters decoupled from `SceneManager`.
+- Verify that elapsed time, health, enemy pool, and spawn pressure all start fresh after restart.
+
 ## Phase 1 Status
 
 - Status: in progress.
@@ -152,4 +161,12 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
 - Runtime composition is explicit-wiring only; `GameplayCompositionRoot` does not search child hierarchy for missing references.
 - Gameplay prefabs exist under `Assets/Prefabs/Gameplay/`.
 - `MagicalTowerPrototype.unity` is wired for a runnable prototype slice.
-- UI, HUD, damage numbers, final materials, and polish remain for later phases.
+- Final materials and polish remain for later phases.
+
+## Phase 5 Status
+
+- Status: implemented and runtime-validated.
+- `HudPresenter`, `GameOverPresenter`, `DamageNumberSpawner`, and `DamageNumber` exist under `Assets/Scripts/UI/`.
+- `HudCanvas` owns the health bar/value, elapsed time label, and game-over panel.
+- `DamageCanvas` owns runtime damage-number spawning.
+- `Assets/Prefabs/UI/DamageNumber.prefab` is assigned to `DamageNumberSpawner`.

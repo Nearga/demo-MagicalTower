@@ -37,7 +37,7 @@ namespace MagicalTower.Runtime
             ResetFromDefinition();
             movementController?.Configure(this, targetTower != null ? targetTower.transform : null);
             attackController?.Configure(this, targetTower);
-            statusEffectController?.Configure(this);
+            statusEffectController?.Configure(this, messageBus);
         }
 
         private void Awake()

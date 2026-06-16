@@ -6,38 +6,60 @@ Read this before implementing tower health bars, damage number text, game-over d
 
 ## Primary paths
 
-- Live project-owned UI paths: none yet under `Assets/`.
-- Task brief: parent `Test Task.md`.
-- Proposed UI source root: `Assets/Scripts/UI/` or a focused UI folder under the owning runtime feature if the implementation stays small.
-- Proposed UI prefab root: `Assets/Prefabs/UI/`.
-- Proposed scene root: `Assets/Scenes/`.
+- Live project-owned UI scripts: `Assets/Scripts/UI/`
+  - `HudPresenter.cs`
+  - `GameOverPresenter.cs`
+  - `DamageNumberSpawner.cs`
+  - `DamageNumber.cs`
+- Live UI prefab root: `Assets/Prefabs/UI/`
+  - `DamageNumber.prefab` — RectTransform + CanvasGroup + TMP_Text child + DamageNumber script
+- Proposed scene root: `Assets/Scenes/MagicalTowerPrototype.unity`
 
 ## Runtime/source owners
 
-- No live UI owners exist yet.
-- Task-derived UI owners to create:
-  - Tower health bar presenter bound to the tower health owner.
-  - Damage number spawner/presenter for enemy and tower damage.
-  - Game-over presenter triggered when tower health reaches zero.
-  - HUD canvas or world-space canvas owner depending on the first scene composition.
+- `HudPresenter` — subscribes to `TowerHealthChangedMessage`; polls `GameSession.ElapsedTime` in `Update`.
+  - Drives a Unity `Slider` (fill-only) and a `TMP_Text` label for health.
+  - Drives a `TMP_Text` label for elapsed time (frozen on game over).
+- `GameOverPresenter` — subscribes to `TowerDestroyedMessage`; enables the game-over panel GameObject.
+  - Panel contains static TMP text ("TOWER DESTROYED") authored in the scene.
+  - Restart button and scene reload are Phase 8 work.
+- `DamageNumberSpawner` — subscribes to `DamageDealtMessage` and `BurningTickMessage`.
+  - Converts `report.WorldPosition` to screen space via `Camera.WorldToScreenPoint`.
+  - Distinguishes tower vs enemy hits by checking `report.Target is TowerHealth`.
+  - Burning ticks use the separate `BurningTickMessage` for distinct coloring.
+  - Instantiates `DamageNumber` prefab as a child under `DamageCanvas`.
+- `DamageNumber` — self-timed rise+fade driven by `Update`; destroys itself at end of lifetime.
+
+## Canvas setup (scene)
+
+Both canvases live under `GameRoot/UIRoot` in `MagicalTowerPrototype.unity`:
+
+- **`HudCanvas`** — Screen Space Overlay, `CanvasScaler` scale-with-screen (1920×1080 reference)
+  - `HealthBar` (Slider, fill-only) + `HealthLabel` (TMP_Text)
+  - `ElapsedTimeLabel` (TMP_Text, top-right)
+  - `GameOverPanel` (disabled by default) — dark overlay + TMP_Text "TOWER DESTROYED"
+  - `HudPresenter` and `GameOverPresenter` components attached here
+- **`DamageCanvas`** — Screen Space Overlay (same camera), `DamageNumberSpawner` component attached
 
 ## Data/config owners
 
-- UI display settings can start as serialized fields on focused presenters.
-- Damage number style/timing can later move to a small UI config asset if reused across enemies and tower.
+- All style settings (colors, lifetime, riseSpeed, fadeStartFraction) are `[SerializeField]` fields on `DamageNumberSpawner`.
+- No separate UI config asset is needed for Phase 5.
 
 ## Cross-module routes
 
-- UI should subscribe to runtime events or receive calls from scene composition/presenters; it should not own damage resolution.
-- Damage number spawning should be a presentation effect created after damage is confirmed by runtime owners.
-- Tower health bar should read/display tower health state, not decide game-over rules.
+- UI subscribes to `RuntimeMessageBus` events via `Configure()`; it does not own damage resolution.
+- `GameplayCompositionRoot` calls `Configure` on all three presenters in `ConfigureRuntime()`.
+- `BurningTickMessage` is published by `StatusEffectController` (not via `DamageDealtMessage`) so the spawner can apply a distinct orange color without re-inspecting the report.
 
 ## Validation hints
 
-- Validate health bar changes when the tower takes damage.
-- Validate damage numbers spawn for both enemies and tower damage.
-- Validate game-over display appears when tower health reaches zero.
-- If world-space damage numbers are used, validate camera/canvas conversion and final drawn positions in Play Mode.
+- Verify health bar fills correctly at game start and decreases on enemy contact damage.
+- Verify elapsed time label increments each second and freezes on game over.
+- Verify game-over panel appears when tower health reaches zero (and not before).
+- Verify damage numbers appear at the correct screen position for enemy hits and at the tower for tower hits.
+- Verify burning tick numbers appear in the distinct orange color.
+- Verify no NullReferenceExceptions in the console during a full run.
 
 ## Do-not-touch
 
@@ -47,5 +69,5 @@ Read this before implementing tower health bars, damage number text, game-over d
 
 ## Open gaps
 
-- No Canvas, TMP/TextMeshPro package dependency, UI prefabs, presenters, or runtime event path exist yet.
-- The project manifest currently does not include TextMeshPro as an explicit package; Unity may provide it via built-in UI workflows, but verify before depending on TMP-specific code.
+- Restart button and scene reload live in Phase 8 (Replayability).
+- `DamageNumber` uses instantiate/destroy; pooling can be added later if profiling shows it matters.
