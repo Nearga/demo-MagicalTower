@@ -37,6 +37,10 @@
   - Generated textures: `Assets/Art/Generated/Textures/`
   - Materials: `Assets/Materials/`
   - Validation screenshots: `Assets/Screenshots~/`
+- Phase 7 VFX assets:
+  - Fire/burning materials: `Assets/Materials/FireNova_Flame.mat`, `Assets/Materials/BurningEnemy_Flame.mat`
+  - Runtime VFX prefabs: `Assets/Prefabs/Gameplay/FireNovaEffect.prefab`, `Assets/Prefabs/Gameplay/BurningEnemyEffect.prefab`
+  - DOTween dependency: `Assets/Plugins/Demigiant/DOTween/`
 
 ## Do-Not-Touch Areas
 
@@ -55,4 +59,5 @@
 - Content ownership now exists through ScriptableObject definition types in `Assets/Scripts/Content/` and initial tuning assets in `Assets/Content/`.
 - Runtime gameplay ownership now exists under `Assets/Scripts/Runtime/`; Phase 4 gameplay prefabs and explicit scene wiring exist. Phase 5 UI presenters and damage-number prefab exist under `Assets/Scripts/UI/` and `Assets/Prefabs/UI/`. Assembly ownership still needs a first concrete owner.
 - Phase 6 added editor-only runtime logging under `Assets/Scripts/Runtime/Utility/`, collision-gated enemy contact damage, tuned content assets, generated material textures, and a scene-owned `ArenaFloor` visual plane.
+- Phase 7 added DOTween-driven fire nova and burning enemy VFX through focused runtime owners under `Assets/Scripts/Runtime/Projectiles/` and `Assets/Scripts/Runtime/Status/`.
 - Future tasks that add features should route new files beside the first concrete owner they create and refresh the relevant focused map afterward.

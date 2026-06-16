@@ -509,6 +509,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 669489887}
   m_CullTransparentMesh: 1
+--- !u!134 &697241184
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance)'
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1 &735522448
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +599,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735522448}
-  m_Material: {fileID: 737383209}
+  m_Material: {fileID: 697241184}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -644,6 +657,7 @@ MonoBehaviour:
     projectilePrefab: {fileID: 3679265396906989366, guid: b4db32946154e8144a51ad851dbd1cbb, type: 3}
   enemyRegistry: {fileID: 989380054}
   projectileRoot: {fileID: 1614688258}
+  vfxRoot: {fileID: 772293644}
   messageBus: {fileID: 989380056}
   viewCamera: {fileID: 2125863363}
 --- !u!114 &735522454
@@ -661,19 +675,6 @@ MonoBehaviour:
   definition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
   messageBus: {fileID: 989380056}
   gameSession: {fileID: 989380055}
---- !u!134 &737383209
-PhysicsMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance)'
-  serializedVersion: 2
-  m_DynamicFriction: 0.6
-  m_StaticFriction: 0.6
-  m_Bounciness: 0
-  m_FrictionCombine: 0
-  m_BounceCombine: 0
 --- !u!1 &752095307
 GameObject:
   m_ObjectHideFlags: 0
@@ -855,6 +856,7 @@ MonoBehaviour:
   enemySpawnRoot: {fileID: 1200816758}
   enemyPoolRoot: {fileID: 229767717}
   projectileRoot: {fileID: 1614688258}
+  vfxRoot: {fileID: 772293644}
   viewCamera: {fileID: 2125863363}
   towerDefinition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
   enemyPoolConfig: {fileID: 11400000, guid: 15ce52ae41b61624fa9f1523f14856e2, type: 2}

@@ -59,6 +59,12 @@ Read this before adding or tuning enemies, spells, projectile parameters, burnin
   - `Assets/Materials/Arena_BasaltFloor.mat`
   - `Assets/Materials/Enemy_ObsidianHide.mat`
   - `Assets/Materials/Fireball_Glow.mat`
+- Phase 7 VFX material assets:
+  - `Assets/Materials/FireNova_Flame.mat`
+  - `Assets/Materials/BurningEnemy_Flame.mat`
+- Phase 7 VFX prefab assets:
+  - `Assets/Prefabs/Gameplay/FireNovaEffect.prefab`
+  - `Assets/Prefabs/Gameplay/BurningEnemyEffect.prefab`
 
 ## Cross-module routes
 

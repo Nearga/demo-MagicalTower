@@ -186,3 +186,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.StatusEffectController
   damageReceiverSource: {fileID: 259133387336695461}
+  burningVisualPrefab: {fileID: 6629750195549085145, guid: 7c89184f6f7489a45ae0772f11013aae, type: 3}

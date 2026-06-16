@@ -7,18 +7,25 @@ namespace MagicalTower.Runtime
     {
         [SerializeField] private ProjectileDefinition definition;
         [SerializeField] private RuntimeMessageBus messageBus;
+        [SerializeField] private FireNovaEffect explosionEffectPrefab;
         [SerializeField] private LayerMask damageMask = ~0;
         [SerializeField] private float lifetime = 5f;
 
         private Vector3 direction = Vector3.forward;
+        private Transform vfxRoot;
         private float age;
         private bool exploded;
 
-        public void Configure(ProjectileDefinition projectileDefinition, Vector3 flyDirection, RuntimeMessageBus bus)
+        public void Configure(
+            ProjectileDefinition projectileDefinition,
+            Vector3 flyDirection,
+            RuntimeMessageBus bus,
+            Transform effectsRoot)
         {
             definition = projectileDefinition;
             direction = flyDirection.sqrMagnitude > 0.001f ? flyDirection.normalized : transform.forward;
             messageBus = bus;
+            vfxRoot = effectsRoot;
             age = 0f;
             exploded = false;
         }
@@ -68,12 +75,26 @@ namespace MagicalTower.Runtime
             }
 
             exploded = true;
+            PlayExplosionEffect(position);
+
             if (definition.ImpactRadius > 0f)
             {
                 DamageArea(position);
             }
 
             Destroy(gameObject);
+        }
+
+        private void PlayExplosionEffect(Vector3 position)
+        {
+            if (explosionEffectPrefab == null)
+            {
+                return;
+            }
+
+            var instance = Instantiate(explosionEffectPrefab, position, Quaternion.identity, vfxRoot);
+            var radius = definition != null ? definition.ImpactRadius : 0f;
+            instance.Play(radius);
         }
 
         private void DamageArea(Vector3 position)

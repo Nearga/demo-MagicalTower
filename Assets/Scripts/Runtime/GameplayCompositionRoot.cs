@@ -22,6 +22,7 @@ namespace MagicalTower.Runtime
         [SerializeField] private Transform enemySpawnRoot;
         [SerializeField] private Transform enemyPoolRoot;
         [SerializeField] private Transform projectileRoot;
+        [SerializeField] private Transform vfxRoot;
         [SerializeField] private Camera viewCamera;
 
         [Header("Content")]
@@ -68,6 +69,7 @@ namespace MagicalTower.Runtime
             if (enemySpawnRoot  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemySpawnRoot)}' is not assigned.", this);  isValid = false; }
             if (enemyPoolRoot   == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(enemyPoolRoot)}' is not assigned.", this);   isValid = false; }
             if (projectileRoot  == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(projectileRoot)}' is not assigned.", this);  isValid = false; }
+            if (vfxRoot         == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(vfxRoot)}' is not assigned.", this);         isValid = false; }
             if (viewCamera      == null) { Debug.LogError($"[{nameof(GameplayCompositionRoot)}] '{nameof(viewCamera)}' is not assigned.", this);      isValid = false; }
 
             // Content
@@ -109,7 +111,7 @@ namespace MagicalTower.Runtime
             towerHealth?.Configure(towerDefinition, messageBus, gameSession);
             enemyPool?.Configure(enemyPoolConfig, enemyPrefab, enemyPoolRoot, enemyRegistry, messageBus, towerHealth);
             enemySpawner?.Configure(spawnSchedule, enemyPool, gameSession, enemySpawnRoot, towerHealth, viewCamera);
-            spellScheduler?.Configure(spellBindings, enemyRegistry, projectileRoot, messageBus, viewCamera);
+            spellScheduler?.Configure(spellBindings, enemyRegistry, projectileRoot, vfxRoot, messageBus, viewCamera);
             hudPresenter?.Configure(gameSession, messageBus);
             gameOverPresenter?.Configure(messageBus);
             damageNumberSpawner?.Configure(viewCamera, messageBus);

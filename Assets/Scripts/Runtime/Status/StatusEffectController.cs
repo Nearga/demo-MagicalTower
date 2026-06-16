@@ -7,14 +7,22 @@ namespace MagicalTower.Runtime
     public sealed class StatusEffectController : MonoBehaviour
     {
         [SerializeField] private MonoBehaviour damageReceiverSource;
+        [SerializeField] private BurningStatusVisual burningVisualPrefab;
 
         private IDamageReceiver damageReceiver;
         private RuntimeMessageBus messageBus;
         private Coroutine burningRoutine;
+        private BurningStatusVisual activeBurningVisual;
 
         private void Awake()
         {
             damageReceiver = damageReceiverSource as IDamageReceiver;
+        }
+
+        private void OnDisable()
+        {
+            burningRoutine = null;
+            StopBurningVisual();
         }
 
         public void Configure(IDamageReceiver receiver, RuntimeMessageBus bus)
@@ -34,8 +42,10 @@ namespace MagicalTower.Runtime
             if (definition.StackPolicy == StatusStackPolicy.RefreshDuration && burningRoutine != null)
             {
                 StopCoroutine(burningRoutine);
+                burningRoutine = null;
             }
 
+            PlayBurningVisual();
             burningRoutine = StartCoroutine(BurningRoutine(definition, source));
         }
 
@@ -67,7 +77,42 @@ namespace MagicalTower.Runtime
                 }
             }
 
-            burningRoutine = null;
+            StopBurning();
+        }
+
+        private void PlayBurningVisual()
+        {
+            if (activeBurningVisual == null && burningVisualPrefab != null)
+            {
+                activeBurningVisual = Instantiate(burningVisualPrefab, transform);
+            }
+
+            activeBurningVisual?.Play();
+        }
+
+        private void StopBurning()
+        {
+            if (burningRoutine != null)
+            {
+                StopCoroutine(burningRoutine);
+                burningRoutine = null;
+            }
+
+            if (activeBurningVisual != null)
+            {
+                StopBurningVisual();
+            }
+        }
+
+        private void StopBurningVisual()
+        {
+            if (activeBurningVisual == null)
+            {
+                return;
+            }
+
+            activeBurningVisual.StopAndDestroy();
+            activeBurningVisual = null;
         }
     }
 }

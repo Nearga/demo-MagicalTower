@@ -33,14 +33,16 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - Enemy spawning/pooling: `EnemySpawner`, `EnemyPool`.
   - Target registry: `ActiveEnemyRegistry`.
   - Spell casting: `TowerSpellScheduler`.
-  - Projectiles: `LinearExplosiveProjectile`, `ArcTargetProjectile`.
-  - Damage/status: `IDamageReceiver`, `DamageRequest`, `DamageReport`, `StatusEffectController`.
+  - Projectiles: `LinearExplosiveProjectile`, `ArcTargetProjectile`, `FireNovaEffect`.
+  - Damage/status: `IDamageReceiver`, `DamageRequest`, `DamageReport`, `StatusEffectController`, `BurningStatusVisual`.
   - Editor-only diagnostics: `GameLog`, `LogChannel`.
 - Live prefab owners:
   - `Assets/Prefabs/Gameplay/Tower.prefab`
   - `Assets/Prefabs/Gameplay/EnemyAgent.prefab`
   - `Assets/Prefabs/Gameplay/FireballProjectile.prefab`
   - `Assets/Prefabs/Gameplay/BarrageProjectile.prefab`
+  - `Assets/Prefabs/Gameplay/FireNovaEffect.prefab`
+  - `Assets/Prefabs/Gameplay/BurningEnemyEffect.prefab`
 
 ## Data/config owners
 
@@ -50,6 +52,10 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - Enemy contact damage is collision-gated in `EnemyAttackController` using enemy/tower colliders plus `contactTolerance`; center-distance `attackRange` is no longer the tower damage gate.
   - `EnemyMovementController` follows the same collider-contact semantics before stopping; missing-collider fallback is intentionally small.
   - `LinearExplosiveProjectile` ignores `TowerHealth` colliders/receivers so tower-cast fireballs cannot damage the tower.
+- Phase 7 VFX ownership:
+  - `LinearExplosiveProjectile` spawns `FireNovaEffect` at impact using `ProjectileDefinition.ImpactRadius` as the visual radius.
+  - `GameplayCompositionRoot` passes scene `VfxRoot` through `TowerSpellScheduler` into linear projectiles for transient explosion parenting.
+  - `StatusEffectController` owns burning visual lifecycle, instantiating one `BurningStatusVisual` while `BurningRoutine` is active and cleaning it up on refresh, expiry, disable, death, or pool return.
 
 ## Cross-module routes
 
@@ -63,6 +69,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - After adding runtime code, validate Unity compile/import with Unity `6000.4.8f1`.
 - For gameplay proof, use Play Mode with a scene containing tower, camera, spawner, enemy definitions, spell definitions, and UI.
 - Phase 6 validation proof captured contact logs showing tower HP stayed at 100 until enemy contact; screenshot saved to `Assets/Screenshots~/phase6-polish-validation.png`.
+- Phase 7 validation captured DOTween fire nova/burning VFX proof with screenshot `Assets/Screenshots~/phase7-fire-nova-burning.png`.
 - For architecture proof, list owner chain for each core feature: scene/bootstrap -> system owner -> content definition -> runtime behavior.
 
 ## Do-not-touch

@@ -10,6 +10,7 @@ namespace MagicalTower.Runtime
         [SerializeField] private SpellCastBinding[] spells = Array.Empty<SpellCastBinding>();
         [SerializeField] private ActiveEnemyRegistry enemyRegistry;
         [SerializeField] private Transform projectileRoot;
+        [SerializeField] private Transform vfxRoot;
         [SerializeField] private RuntimeMessageBus messageBus;
         [SerializeField] private Camera viewCamera;
 
@@ -20,12 +21,14 @@ namespace MagicalTower.Runtime
             SpellCastBinding[] spellBindings,
             ActiveEnemyRegistry registry,
             Transform root,
+            Transform effectsRoot,
             RuntimeMessageBus bus,
             Camera camera)
         {
             spells = spellBindings ?? Array.Empty<SpellCastBinding>();
             enemyRegistry = registry;
             projectileRoot = root;
+            vfxRoot = effectsRoot;
             messageBus = bus;
             viewCamera = camera;
             EnsureCooldowns();
@@ -93,7 +96,7 @@ namespace MagicalTower.Runtime
             var instance = Instantiate(spell.ProjectilePrefab, start, Quaternion.LookRotation(direction.normalized), projectileRoot);
             if (instance.TryGetComponent<LinearExplosiveProjectile>(out var projectile))
             {
-                projectile.Configure(spell.Definition.ProjectileDefinition, direction.normalized, messageBus);
+                projectile.Configure(spell.Definition.ProjectileDefinition, direction.normalized, messageBus, vfxRoot);
             }
         }
 
