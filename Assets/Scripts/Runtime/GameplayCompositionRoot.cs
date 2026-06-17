@@ -19,6 +19,7 @@ namespace MagicalTower.Runtime
             builder.RegisterComponentInHierarchy<MagicalTower.UI.HudPresenter>();
             builder.RegisterComponentInHierarchy<MagicalTower.UI.GameOverPresenter>();
             builder.RegisterComponentInHierarchy<MagicalTower.UI.DamageNumberSpawner>();
+            builder.RegisterComponentInHierarchy<MagicalTower.UI.TimerGameOverButton>();
 
             builder.RegisterBuildCallback(container =>
             {

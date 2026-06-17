@@ -182,3 +182,11 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
 - `HudCanvas` owns the health bar/value, elapsed time label, and game-over panel.
 - `DamageCanvas` owns runtime damage-number spawning.
 - `Assets/Prefabs/UI/DamageNumber.prefab` is assigned to `DamageNumberSpawner`.
+
+## Phase 8 Status
+
+- Status: implemented.
+- `SceneLoader` exists under `Assets/Scripts/Runtime/Session/` and reloads the active build-indexed scene.
+- `GameRoot` owns the `SceneLoader` component.
+- `GameOverPanel` owns a scene-authored `PLAY AGAIN` button wired directly to `SceneLoader.ReloadActiveScene`.
+- `Assets/Scenes/MagicalTowerPrototype.unity` is enabled in build settings so active-scene reload has build index `0`.

@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MagicalTowerPrototype.unity
+    guid: 9a675c8178d470c40b6c994bbf8c3c2c
   m_configObjects: {}

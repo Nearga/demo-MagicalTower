@@ -28,7 +28,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 
 - Live runtime owners:
   - Scene composition/internal services: `GameplayCompositionRoot` as a VContainer `LifetimeScope`, `RuntimeMessageBus`.
-  - Game/session flow: `GameSession`.
+  - Game/session flow: `GameSession`, `SceneLoader`.
   - Player tower health/combat target: `PlayersTower`.
   - Enemy lifecycle: `EnemyAgent`, `EnemyMovementController`, `EnemyAttackController`.
   - Generic visual pooling: `GenericObjectPool`, `PooledObject`.
@@ -63,6 +63,10 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - `GameplayCompositionRoot` injects all scene `GenericObjectPool` components on container build so pooled prefab instances are created through VContainer.
   - The prototype scene wires enemy pooling on `EnemiesRoot` and projectile/fire nova/burning visual pools on `Tower`.
   - `PooledObject` owns return-to-pool behavior for runtime instances and falls back to destroy only when no owner pool exists.
+- Replay ownership:
+  - `SceneLoader` lives on scene `GameRoot` and owns active-scene reload for the `PLAY AGAIN` button.
+  - Replay is a full scene reload, so `GameSession`, `PlayersTower`, pools, spawner timers, and spell scheduling reset through normal scene/prefab initialization rather than custom reset methods.
+  - `TimerGameOverButton` on `ElapsedTimeLabel` ends the active round through `GameSession.EndGame(playersTower)` for a direct clickable timer debug path.
 
 ## Cross-module routes
 
@@ -94,3 +98,4 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - Runtime owners and gameplay prefabs are wired for a runnable prototype slice.
 - Phase 5 UI presenters, HUD, game-over panel, and damage numbers are wired through `GameplayCompositionRoot`.
 - Phase 6 balance/polish is implemented: generated materials are assigned to tower/enemy/fireball prefabs, `ArenaFloor` is scene-owned and visual-only, and tower HP loss is limited to collision-gated enemy contact.
+- Phase 8 replayability is implemented: `SceneLoader` on `GameRoot` reloads the build-indexed active scene from the game-over `PLAY AGAIN` button.

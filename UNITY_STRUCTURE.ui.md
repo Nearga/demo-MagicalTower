@@ -20,9 +20,10 @@ Read this before implementing tower health bars, damage number text, game-over d
 - `HudPresenter` — subscribes to `PlayersTowerChangedMessage`; polls `GameSession.ElapsedTime` in `Update`.
   - Drives a Unity `Slider` (fill-only) and a `TMP_Text` label for health.
   - Drives a `TMP_Text` label for elapsed time (frozen on game over).
+- `TimerGameOverButton` — attached to `ElapsedTimeLabel`; makes the top-right timer clickable and ends the current round through `GameSession.EndGame`.
 - `GameOverPresenter` — subscribes to `TowerDestroyedMessage`; enables the game-over panel GameObject.
   - Panel contains static TMP text ("TOWER DESTROYED") authored in the scene.
-  - Restart button and scene reload are Phase 8 work.
+  - `PLAY AGAIN` button is authored in the scene under the panel and calls `SceneLoader.ReloadActiveScene` directly.
 - `DamageNumberSpawner` — subscribes to `DamageDealtMessage` and `BurningTickMessage`.
   - Converts `report.WorldPosition` to screen space via `Camera.WorldToScreenPoint`.
   - Distinguishes tower vs enemy hits by checking `report.Target is PlayersTower`.
@@ -36,10 +37,12 @@ Both canvases live under `GameRoot/UIRoot` in `MagicalTowerPrototype.unity`:
 
 - **`HudCanvas`** — Screen Space Overlay, `CanvasScaler` scale-with-screen (1920×1080 reference)
   - `HealthBar` (Slider, fill-only) + `HealthLabel` (TMP_Text)
-  - `ElapsedTimeLabel` (TMP_Text, top-right)
+  - `ElapsedTimeLabel` (TMP_Text + Button + `TimerGameOverButton`, top-right)
   - `GameOverPanel` (disabled by default) — dark overlay + TMP_Text "TOWER DESTROYED"
+    - `PlayAgainButton` (Button + TMP_Text "PLAY AGAIN") calls scene `SceneLoader.ReloadActiveScene`.
   - `HudPresenter` and `GameOverPresenter` components attached here
 - **`DamageCanvas`** — Screen Space Overlay (same camera), `DamageNumberSpawner` component attached
+- **`EventSystem`** — scene-owned under `UIRoot` so the game-over button receives pointer clicks.
 
 ## Data/config owners
 
@@ -69,5 +72,5 @@ Both canvases live under `GameRoot/UIRoot` in `MagicalTowerPrototype.unity`:
 
 ## Open gaps
 
-- Restart button and scene reload live in Phase 8 (Replayability).
+- Phase 8 replay button exists under `GameOverPanel` and reloads the active build-indexed scene.
 - `DamageNumber` uses instantiate/destroy; pooling can be added later if profiling shows it matters.
