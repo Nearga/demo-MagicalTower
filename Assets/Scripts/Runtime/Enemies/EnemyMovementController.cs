@@ -12,11 +12,15 @@ namespace MagicalTower.Runtime
         [SerializeField] private float contactTolerance = 0.05f;
         [SerializeField] private float missingColliderStoppingDistance = 0.35f;
 
+        private float stopDistanceSqr;
+        private bool hasStopDistance;
+
         [Inject]
         public void Construct(PlayersTower targetTower)
         {
             target = targetTower != null ? targetTower.transform : target;
             targetCollider = targetTower != null ? targetTower.GetComponent<Collider>() : targetCollider;
+            RefreshStopDistance();
         }
 
         private void Awake()
@@ -29,6 +33,11 @@ namespace MagicalTower.Runtime
             ResolveEnemyCollider();
         }
 
+        private void OnEnable()
+        {
+            RefreshStopDistance();
+        }
+
         private void Update()
         {
             if (agent == null || agent.Definition == null || target == null || !agent.IsAlive)
@@ -36,13 +45,13 @@ namespace MagicalTower.Runtime
                 return;
             }
 
-            var offset = target.position - transform.position;
-            offset.y = 0f;
-            if (ShouldStop(offset))
+            if (ShouldStop())
             {
                 return;
             }
 
+            var offset = target.position - transform.position;
+            offset.y = 0f;
             var direction = offset.normalized;
             transform.position += direction * agent.Definition.MovementSpeed * Time.deltaTime;
             transform.forward = direction;
@@ -56,7 +65,7 @@ namespace MagicalTower.Runtime
             }
         }
 
-        private bool ShouldStop(Vector3 horizontalOffset)
+        private void RefreshStopDistance()
         {
             ResolveEnemyCollider();
             if (targetCollider == null && target != null)
@@ -64,27 +73,22 @@ namespace MagicalTower.Runtime
                 targetCollider = target.GetComponent<Collider>();
             }
 
-            if (enemyCollider == null || targetCollider == null)
-            {
-                return horizontalOffset.sqrMagnitude <= missingColliderStoppingDistance * missingColliderStoppingDistance;
-            }
-
-            if (Physics.ComputePenetration(
+            stopDistanceSqr = EnemyPlanarContact.ContactDistanceSqr(
                 enemyCollider,
-                enemyCollider.transform.position,
-                enemyCollider.transform.rotation,
                 targetCollider,
-                targetCollider.transform.position,
-                targetCollider.transform.rotation,
-                out _,
-                out _))
+                contactTolerance,
+                missingColliderStoppingDistance);
+            hasStopDistance = true;
+        }
+
+        private bool ShouldStop()
+        {
+            if (!hasStopDistance)
             {
-                return true;
+                RefreshStopDistance();
             }
 
-            var enemyPoint = enemyCollider.ClosestPoint(targetCollider.bounds.center);
-            var targetPoint = targetCollider.ClosestPoint(enemyPoint);
-            return (targetPoint - enemyPoint).sqrMagnitude <= contactTolerance * contactTolerance;
+            return EnemyPlanarContact.DistanceSqrXZ(transform, target) <= stopDistanceSqr;
         }
     }
 }

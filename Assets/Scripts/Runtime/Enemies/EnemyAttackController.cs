@@ -13,12 +13,15 @@ namespace MagicalTower.Runtime
         [SerializeField] private float missingColliderFallbackRange = 0.35f;
 
         private float cooldown;
+        private float contactDistanceSqr;
+        private bool hasContactDistance;
 
         [Inject]
         public void Construct(PlayersTower targetTower)
         {
             target = targetTower;
             towerCollider = target != null ? target.GetComponent<Collider>() : null;
+            RefreshContactDistance();
         }
 
         private void Awake()
@@ -29,6 +32,11 @@ namespace MagicalTower.Runtime
             }
 
             ResolveEnemyCollider();
+        }
+
+        private void OnEnable()
+        {
+            RefreshContactDistance();
         }
 
         private void Update()
@@ -65,7 +73,7 @@ namespace MagicalTower.Runtime
             }
         }
 
-        private bool IsTouchingTower()
+        private void RefreshContactDistance()
         {
             ResolveEnemyCollider();
             if (towerCollider == null && target != null)
@@ -73,29 +81,22 @@ namespace MagicalTower.Runtime
                 towerCollider = target.GetComponent<Collider>();
             }
 
-            if (enemyCollider == null || towerCollider == null)
-            {
-                var offset = target.transform.position - transform.position;
-                offset.y = 0f;
-                return offset.sqrMagnitude <= missingColliderFallbackRange * missingColliderFallbackRange;
-            }
-
-            if (Physics.ComputePenetration(
+            contactDistanceSqr = EnemyPlanarContact.ContactDistanceSqr(
                 enemyCollider,
-                enemyCollider.transform.position,
-                enemyCollider.transform.rotation,
                 towerCollider,
-                towerCollider.transform.position,
-                towerCollider.transform.rotation,
-                out _,
-                out _))
+                contactTolerance,
+                missingColliderFallbackRange);
+            hasContactDistance = true;
+        }
+
+        private bool IsTouchingTower()
+        {
+            if (!hasContactDistance)
             {
-                return true;
+                RefreshContactDistance();
             }
 
-            var enemyPoint = enemyCollider.ClosestPoint(towerCollider.bounds.center);
-            var towerPoint = towerCollider.ClosestPoint(enemyPoint);
-            return (towerPoint - enemyPoint).sqrMagnitude <= contactTolerance * contactTolerance;
+            return EnemyPlanarContact.DistanceSqrXZ(transform, target.transform) <= contactDistanceSqr;
         }
     }
 }

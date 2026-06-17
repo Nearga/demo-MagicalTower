@@ -33,10 +33,9 @@ namespace MagicalTower.Runtime
                 return;
             }
 
-            var snapshot = handlers.ToArray();
-            for (var i = 0; i < snapshot.Length; i++)
+            for (var i = handlers.Count - 1; i >= 0; i--)
             {
-                if (snapshot[i] is Action<TMessage> handler)
+                if (i < handlers.Count && handlers[i] is Action<TMessage> handler)
                 {
                     handler.Invoke(message);
                 }
