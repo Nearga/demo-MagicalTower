@@ -9,6 +9,7 @@ namespace MagicalTower.Runtime
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponentInHierarchy<RuntimeMessageBus>();
+            
             builder.RegisterComponentInHierarchy<GameSession>();
             builder.RegisterComponentInHierarchy<PlayersTower>();
             builder.RegisterComponentInHierarchy<ActiveEnemyRegistry>();

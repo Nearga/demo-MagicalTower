@@ -47,6 +47,11 @@ namespace MagicalTower.Runtime
             transform.position += direction * definition.Speed * Time.deltaTime;
         }
 
+        private void OnDisable()
+        {
+            ClearRuntimeState();
+        }
+
         private void OnCollisionEnter(Collision collision)
         {
             if (IsTowerCollider(collision.collider))
@@ -117,12 +122,31 @@ namespace MagicalTower.Runtime
             Destroy(gameObject);
         }
 
+        private void ClearRuntimeState()
+        {
+            definition = null;
+            direction = Vector3.forward;
+            vfxRoot = null;
+            explosionEffectPool = null;
+            age = 0f;
+            exploded = false;
+        }
+
+        private static readonly Collider[] OverlapBuffer = new Collider[64];
+
         private void DamageArea(Vector3 position)
         {
-            var hits = Physics.OverlapSphere(position, definition.ImpactRadius, damageMask, QueryTriggerInteraction.Collide);
-            for (var i = 0; i < hits.Length; i++)
+            var count = Physics.OverlapSphereNonAlloc(position, definition.ImpactRadius, OverlapBuffer, damageMask, QueryTriggerInteraction.Collide);
+            var hitLimit = Mathf.Min(count, OverlapBuffer.Length);
+            for (var i = 0; i < hitLimit; i++)
             {
-                var receiver = DamageReceiverLookup.FromCollider(hits[i]);
+                var hit = OverlapBuffer[i];
+                if (hit == null)
+                {
+                    continue;
+                }
+
+                var receiver = hit.GetComponentInParent<IDamageReceiver>();
                 if (receiver == null || !receiver.IsAlive)
                 {
                     continue;
@@ -143,11 +167,16 @@ namespace MagicalTower.Runtime
                     $"Fireball dealt {report.Amount} area damage to {receiver.GetType().Name}. Fatal: {report.WasFatal}.",
                     this);
             }
+
+            for (var i = 0; i < hitLimit; i++)
+            {
+                OverlapBuffer[i] = null;
+            }
         }
 
         private static bool IsTowerCollider(Collider collider)
         {
-            return collider != null && DamageReceiverLookup.FromCollider(collider) is PlayersTower;
+            return collider != null && collider.GetComponentInParent<IDamageReceiver>() is PlayersTower;
         }
     }
 }

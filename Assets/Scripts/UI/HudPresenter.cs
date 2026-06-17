@@ -18,6 +18,7 @@ namespace MagicalTower.UI
 
         private GameSession gameSession;
         private IDisposable healthSubscription;
+        private int lastUpdatedSeconds = -1;
 
         [Inject]
         public void Construct(GameSession session, RuntimeMessageBus messageBus)
@@ -39,7 +40,12 @@ namespace MagicalTower.UI
                 return;
             }
 
-            elapsedTimeLabel.text = FormatTime(gameSession.ElapsedTime);
+            var currentSeconds = Mathf.FloorToInt(gameSession.ElapsedTime);
+            if (currentSeconds != lastUpdatedSeconds)
+            {
+                lastUpdatedSeconds = currentSeconds;
+                elapsedTimeLabel.text = FormatTime(gameSession.ElapsedTime);
+            }
         }
 
         private void OnPlayersTowerChanged(PlayersTowerChangedMessage message)

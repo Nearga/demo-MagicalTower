@@ -16,6 +16,7 @@ namespace MagicalTower.Runtime
         private PlayersTower targetTower;
         private float spawnTimer;
         private bool warnedMissingReferences;
+        private int activeBandIndex;
 
         [Inject]
         public void Construct(EnemyPool pool, GameSession session, PlayersTower tower)
@@ -32,11 +33,19 @@ namespace MagicalTower.Runtime
                 return;
             }
 
-            var band = GetCurrentBand(gameSession.ElapsedTime);
-            if (band == null)
+            var timeBands = schedule.TimeBands;
+            if (timeBands == null || timeBands.Count == 0)
             {
                 return;
             }
+
+            var elapsedTime = gameSession.ElapsedTime;
+            while (activeBandIndex + 1 < timeBands.Count && timeBands[activeBandIndex + 1].StartTime <= elapsedTime)
+            {
+                activeBandIndex++;
+            }
+
+            var band = timeBands[activeBandIndex];
 
             spawnTimer -= Time.deltaTime;
             if (spawnTimer > 0f)
@@ -44,8 +53,8 @@ namespace MagicalTower.Runtime
                 return;
             }
 
-            spawnTimer = Mathf.Max(0.1f, band.Value.SpawnInterval);
-            var definition = PickEnemy(band.Value);
+            spawnTimer = Mathf.Max(0.1f, band.SpawnInterval);
+            var definition = PickEnemy(band);
             if (definition == null)
             {
                 return;
@@ -58,7 +67,7 @@ namespace MagicalTower.Runtime
             enemyPool.Spawn(definition, position, rotation);
             GameLog.Info(
                 LogChannel.Spawning,
-                $"Spawned {definition.DisplayName} at {position} after {gameSession.ElapsedTime:0.0}s.",
+                $"Spawned {definition.DisplayName} at {position} after {elapsedTime:0.0}s.",
                 this);
         }
 
@@ -79,20 +88,6 @@ namespace MagicalTower.Runtime
             }
 
             return hasRequiredReferences && !gameSession.IsGameOver;
-        }
-
-        private SpawnTimeBand? GetCurrentBand(float elapsedTime)
-        {
-            SpawnTimeBand? current = null;
-            foreach (var band in schedule.TimeBands)
-            {
-                if (band.StartTime <= elapsedTime)
-                {
-                    current = band;
-                }
-            }
-
-            return current;
         }
 
         private EnemyDefinition PickEnemy(SpawnTimeBand band)

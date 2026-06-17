@@ -1,4 +1,6 @@
-using System.Collections;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using MagicalTower.Content;
 using UnityEngine;
 using VContainer;
@@ -13,8 +15,10 @@ namespace MagicalTower.Runtime
 
         private IDamageReceiver damageReceiver;
         private RuntimeMessageBus messageBus;
-        private Coroutine burningRoutine;
+        private CancellationTokenSource burningCts;
+        private CancellationTokenSource linkedBurningCts;
         private BurningStatusVisual activeBurningVisual;
+        private int burningRunId;
 
         private void Awake()
         {
@@ -28,8 +32,7 @@ namespace MagicalTower.Runtime
 
         private void OnDisable()
         {
-            burningRoutine = null;
-            StopBurningVisual();
+            ResetForPool();
         }
 
         [Inject]
@@ -49,25 +52,43 @@ namespace MagicalTower.Runtime
                 return;
             }
 
-            if (definition.StackPolicy == StatusStackPolicy.RefreshDuration && burningRoutine != null)
-            {
-                StopCoroutine(burningRoutine);
-                burningRoutine = null;
-            }
+            CancelBurningTask();
+            var runId = ++burningRunId;
 
             PlayBurningVisual();
-            burningRoutine = StartCoroutine(BurningRoutine(definition, source));
+
+            burningCts = new CancellationTokenSource();
+            var destroyToken = this.GetCancellationTokenOnDestroy();
+            linkedBurningCts = CancellationTokenSource.CreateLinkedTokenSource(burningCts.Token, destroyToken);
+
+            BurningRoutineAsync(definition, source, runId, linkedBurningCts.Token).Forget();
         }
 
-        private IEnumerator BurningRoutine(BurningStatusEffectDefinition definition, GameObject source)
+        public void ResetForPool()
+        {
+            burningRunId++;
+            CancelBurningTask();
+            StopBurningVisual();
+        }
+
+        private async UniTaskVoid BurningRoutineAsync(
+            BurningStatusEffectDefinition definition,
+            GameObject source,
+            int runId,
+            CancellationToken cancellationToken)
         {
             var elapsed = 0f;
-            while (elapsed < definition.Duration && damageReceiver.IsAlive)
+            while (elapsed < definition.Duration && damageReceiver != null && damageReceiver.IsAlive)
             {
-                yield return new WaitForSeconds(definition.TickInterval);
+                var isCancelled = await UniTask.Delay(TimeSpan.FromSeconds(definition.TickInterval), cancellationToken: cancellationToken).SuppressCancellationThrow();
+                if (isCancelled)
+                {
+                    return;
+                }
+
                 elapsed += definition.TickInterval;
 
-                if (damageReceiver.IsAlive)
+                if (damageReceiver != null && damageReceiver.IsAlive)
                 {
                     var tickPosition = (damageReceiverSource != null)
                         ? damageReceiverSource.transform.position
@@ -87,7 +108,7 @@ namespace MagicalTower.Runtime
                 }
             }
 
-            StopBurning();
+            StopBurning(runId);
         }
 
         private void PlayBurningVisual()
@@ -107,18 +128,33 @@ namespace MagicalTower.Runtime
             activeBurningVisual?.Play();
         }
 
-        private void StopBurning()
+        private void StopBurning(int runId)
         {
-            if (burningRoutine != null)
+            if (runId != burningRunId)
             {
-                StopCoroutine(burningRoutine);
-                burningRoutine = null;
+                return;
             }
+
+            CancelBurningTask();
 
             if (activeBurningVisual != null)
             {
                 StopBurningVisual();
             }
+        }
+
+        private void CancelBurningTask()
+        {
+            if (burningCts != null)
+            {
+                burningCts.Cancel();
+            }
+
+            linkedBurningCts?.Dispose();
+            linkedBurningCts = null;
+
+            burningCts?.Dispose();
+            burningCts = null;
         }
 
         private void StopBurningVisual()

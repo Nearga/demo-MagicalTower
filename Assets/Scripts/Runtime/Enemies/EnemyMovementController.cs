@@ -3,6 +3,7 @@ using VContainer;
 
 namespace MagicalTower.Runtime
 {
+    [RequireComponent(typeof(EnemyAgent))]
     public sealed class EnemyMovementController : MonoBehaviour
     {
         [SerializeField] private EnemyAgent agent;
@@ -20,7 +21,6 @@ namespace MagicalTower.Runtime
         {
             target = targetTower != null ? targetTower.transform : target;
             targetCollider = targetTower != null ? targetTower.GetComponent<Collider>() : targetCollider;
-            RefreshStopDistance();
         }
 
         private void Awake()
@@ -35,7 +35,7 @@ namespace MagicalTower.Runtime
 
         private void OnEnable()
         {
-            RefreshStopDistance();
+            hasStopDistance = false;
         }
 
         private void Update()

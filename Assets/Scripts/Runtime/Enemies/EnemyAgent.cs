@@ -10,16 +10,16 @@ namespace MagicalTower.Runtime
         [SerializeField] private EnemyDefinition definition;
         [SerializeField] private ActiveEnemyRegistry registry;
         [SerializeField] private EnemyPool owningPool;
-        [SerializeField] private EnemyMovementController movementController;
-        [SerializeField] private EnemyAttackController attackController;
         [SerializeField] private StatusEffectController statusEffectController;
+
+        [field: SerializeField] public int CurrentHealth { get; private set; }
 
         private RuntimeMessageBus messageBus;
 
         public event Action<EnemyAgent> Defeated;
 
         public EnemyDefinition Definition => definition;
-        public int CurrentHealth { get; private set; }
+        
         public bool IsAlive => gameObject.activeInHierarchy && CurrentHealth > 0;
         public Transform Transform => transform;
 
@@ -92,6 +92,7 @@ namespace MagicalTower.Runtime
 
         public void Despawn()
         {
+            statusEffectController?.ResetForPool();
             registry?.Unregister(this);
 
             if (owningPool != null)
@@ -105,16 +106,6 @@ namespace MagicalTower.Runtime
 
         private void EnsureCollaborators()
         {
-            if (movementController == null)
-            {
-                movementController = GetComponent<EnemyMovementController>();
-            }
-
-            if (attackController == null)
-            {
-                attackController = GetComponent<EnemyAttackController>();
-            }
-
             if (statusEffectController == null)
             {
                 statusEffectController = GetComponent<StatusEffectController>();

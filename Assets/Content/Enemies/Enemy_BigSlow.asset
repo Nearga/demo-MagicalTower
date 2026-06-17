@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_BigSlow
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Content.EnemyDefinition
   displayName: Big Slow Enemy
-  maxHealth: 80
+  maxHealth: 120
   movementSpeed: 1
   contactDamage: 8
   attackInterval: 1.6

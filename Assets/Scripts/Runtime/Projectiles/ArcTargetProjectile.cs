@@ -15,7 +15,11 @@ namespace MagicalTower.Runtime
 
         private void OnDisable()
         {
+            definition = null;
             target = null;
+            startPosition = Vector3.zero;
+            travelTime = 0f;
+            elapsed = 0f;
             hit = false;
         }
 

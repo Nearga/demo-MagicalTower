@@ -144,7 +144,12 @@ namespace MagicalTower.Runtime
 
         public void Return(GameObject instance)
         {
-            if (instance == null || inactiveLookup.Contains(instance))
+            if (instance == null)
+            {
+                return;
+            }
+
+            if (inactiveLookup.Contains(instance))
             {
                 return;
             }
