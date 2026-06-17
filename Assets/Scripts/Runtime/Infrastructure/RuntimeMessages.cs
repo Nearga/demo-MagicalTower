@@ -12,28 +12,28 @@ namespace MagicalTower.Runtime
         public DamageReport Report { get; }
     }
 
-    public readonly struct TowerHealthChangedMessage
+    public readonly struct PlayersTowerChangedMessage
     {
-        public TowerHealthChangedMessage(TowerHealth tower, int currentHealth, int maxHealth)
+        public PlayersTowerChangedMessage(PlayersTower tower, int currentHealth, int maxHealth)
         {
             Tower = tower;
             CurrentHealth = currentHealth;
             MaxHealth = maxHealth;
         }
 
-        public TowerHealth Tower { get; }
+        public PlayersTower Tower { get; }
         public int CurrentHealth { get; }
         public int MaxHealth { get; }
     }
 
     public readonly struct TowerDestroyedMessage
     {
-        public TowerDestroyedMessage(TowerHealth tower)
+        public TowerDestroyedMessage(PlayersTower tower)
         {
             Tower = tower;
         }
 
-        public TowerHealth Tower { get; }
+        public PlayersTower Tower { get; }
     }
 
     public readonly struct EnemySpawnedMessage

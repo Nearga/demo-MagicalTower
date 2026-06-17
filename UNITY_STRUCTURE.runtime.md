@@ -16,6 +16,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
   - `Assets/Scripts/Runtime/Spells/`
   - `Assets/Scripts/Runtime/Projectiles/`
   - `Assets/Scripts/Runtime/Status/`
+  - `Assets/Scripts/Runtime/Pooling/`
   - `Assets/Scripts/Runtime/Utility/`
 - Task brief: parent `Test Task.md`.
 - Proposed scene root: `Assets/Scenes/`.
@@ -28,9 +29,10 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - Live runtime owners:
   - Scene composition/internal services: `GameplayCompositionRoot` as a VContainer `LifetimeScope`, `RuntimeMessageBus`.
   - Game/session flow: `GameSession`.
-  - Tower health/combat target: `TowerHealth`.
+  - Player tower health/combat target: `PlayersTower`.
   - Enemy lifecycle: `EnemyAgent`, `EnemyMovementController`, `EnemyAttackController`.
-  - Enemy spawning/pooling: `EnemySpawner`, `EnemyPool`.
+  - Generic visual pooling: `GenericObjectPool`, `PooledObject`.
+  - Enemy spawning/pooling: `EnemySpawner`, `EnemyPool` as a typed facade over `GenericObjectPool`.
   - Target registry: `ActiveEnemyRegistry`.
   - Spell casting: `TowerSpellScheduler`.
   - Projectiles: `LinearExplosiveProjectile`, `ArcTargetProjectile`, `FireNovaEffect`.
@@ -51,11 +53,16 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 - Phase 6 tower HP ownership:
   - Enemy contact damage is collision-gated in `EnemyAttackController` using enemy/tower colliders plus `contactTolerance`; center-distance `attackRange` is no longer the tower damage gate.
   - `EnemyMovementController` follows the same collider-contact semantics before stopping; missing-collider fallback is intentionally small.
-  - `LinearExplosiveProjectile` ignores `TowerHealth` colliders/receivers so tower-cast fireballs cannot damage the tower.
+  - `LinearExplosiveProjectile` ignores `PlayersTower` colliders/receivers so tower-cast fireballs cannot damage the tower.
 - Phase 7 VFX ownership:
   - `LinearExplosiveProjectile` spawns `FireNovaEffect` at impact using `ProjectileDefinition.ImpactRadius` as the visual radius.
   - `TowerSpellScheduler` owns the scene `VfxRoot` reference for transient explosion parenting.
   - `StatusEffectController` owns burning visual lifecycle, instantiating one `BurningStatusVisual` while `BurningRoutine` is active and cleaning it up on refresh, expiry, disable, death, or pool return.
+- Visual pooling ownership:
+  - `GenericObjectPool` is a scene-visible, Inspector-tuned MonoBehaviour pool for enemies, projectiles, and VFX.
+  - `GameplayCompositionRoot` injects all scene `GenericObjectPool` components on container build so pooled prefab instances are created through VContainer.
+  - The prototype scene wires enemy pooling on `EnemiesRoot` and projectile/fire nova/burning visual pools on `Tower`.
+  - `PooledObject` owns return-to-pool behavior for runtime instances and falls back to destroy only when no owner pool exists.
 
 ## Cross-module routes
 
@@ -82,6 +89,7 @@ Read this before implementing gameplay, scene objects, enemies, spells, projecti
 ## Open gaps
 
 - Gameplay foundation scene exists at `Assets/Scenes/MagicalTowerPrototype.unity`; Phase 4 explicitly wires runtime components and content references through scene component fields. `GameplayCompositionRoot` is now a VContainer `LifetimeScope` installer only; runtime components own their local content/root/camera fields and shared dependencies are injected. `RuntimeMessageBus` consumers receive it through VContainer injection only; do not reintroduce serialized bus fields or manual bus parameters.
+- Enemy movement, attack, and status controllers use VContainer/local component lookup for stable dependencies; `EnemyAgent.Configure` remains only for per-spawn enemy definition and owning pool payload, and projectile `Configure` methods remain per-cast payload.
 - Scene hierarchy is grouped under `GameRoot`: `GameplayRoot` owns `Tower`, `EnemiesRoot`, `ProjectileRoot`, `VfxRoot`, and `ArenaFloor`; `EnemiesRoot` owns `ActiveEnemyRegistry`, `EnemySpawner`, and `EnemyPool`, with `EnemySpawnRoot` and `EnemyPoolRoot` as child container transforms; `UIRoot` owns canvases; `CameraRoot` owns `Main Camera` and lights.
 - Runtime owners and gameplay prefabs are wired for a runnable prototype slice.
 - Phase 5 UI presenters, HUD, game-over panel, and damage numbers are wired through `GameplayCompositionRoot`.

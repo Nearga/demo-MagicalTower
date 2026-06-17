@@ -9,6 +9,7 @@ namespace MagicalTower.Runtime
     {
         [SerializeField] private MonoBehaviour damageReceiverSource;
         [SerializeField] private BurningStatusVisual burningVisualPrefab;
+        [SerializeField] private GenericObjectPool burningVisualPool;
 
         private IDamageReceiver damageReceiver;
         private RuntimeMessageBus messageBus;
@@ -18,6 +19,11 @@ namespace MagicalTower.Runtime
         private void Awake()
         {
             damageReceiver = damageReceiverSource as IDamageReceiver;
+            if (damageReceiver == null)
+            {
+                damageReceiver = GetComponent<IDamageReceiver>();
+                damageReceiverSource = damageReceiver as MonoBehaviour;
+            }
         }
 
         private void OnDisable()
@@ -26,16 +32,14 @@ namespace MagicalTower.Runtime
             StopBurningVisual();
         }
 
-        public void Configure(IDamageReceiver receiver)
-        {
-            damageReceiver        = receiver;
-            damageReceiverSource  = receiver as MonoBehaviour;
-        }
-
         [Inject]
-        public void Construct(RuntimeMessageBus bus)
+        public void Construct(RuntimeMessageBus bus, EnemyPool enemyPool)
         {
             messageBus = bus;
+            if (burningVisualPool == null && enemyPool != null)
+            {
+                burningVisualPool = enemyPool.BurningVisualPool;
+            }
         }
 
         public void ApplyBurning(BurningStatusEffectDefinition definition, GameObject source)
@@ -88,9 +92,16 @@ namespace MagicalTower.Runtime
 
         private void PlayBurningVisual()
         {
-            if (activeBurningVisual == null && burningVisualPrefab != null)
+            if (activeBurningVisual == null && (burningVisualPool != null || burningVisualPrefab != null))
             {
-                activeBurningVisual = Instantiate(burningVisualPrefab, transform);
+                activeBurningVisual = burningVisualPool != null
+                    ? burningVisualPool.Rent<BurningStatusVisual>(transform.position, transform.rotation)
+                    : Instantiate(burningVisualPrefab, transform);
+
+                if (activeBurningVisual != null)
+                {
+                    activeBurningVisual.transform.SetParent(transform, true);
+                }
             }
 
             activeBurningVisual?.Play();

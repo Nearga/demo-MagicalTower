@@ -5,7 +5,7 @@ using VContainer;
 
 namespace MagicalTower.Runtime
 {
-    public sealed class TowerHealth : MonoBehaviour, IDamageReceiver
+    public sealed class PlayersTower : MonoBehaviour, IDamageReceiver
     {
         [SerializeField] private TowerDefinition definition;
 
@@ -47,7 +47,7 @@ namespace MagicalTower.Runtime
             var report = new DamageReport(this, amount, position, wasFatal);
 
             HealthChanged?.Invoke(CurrentHealth, MaxHealth);
-            messageBus?.Publish(new TowerHealthChangedMessage(this, CurrentHealth, MaxHealth));
+            messageBus?.Publish(new PlayersTowerChangedMessage(this, CurrentHealth, MaxHealth));
             messageBus?.Publish(new DamageDealtMessage(report));
 
             if (wasFatal)
@@ -69,7 +69,7 @@ namespace MagicalTower.Runtime
             initialized = true;
             CurrentHealth = definition.MaxHealth;
             HealthChanged?.Invoke(CurrentHealth, MaxHealth);
-            messageBus?.Publish(new TowerHealthChangedMessage(this, CurrentHealth, MaxHealth));
+            messageBus?.Publish(new PlayersTowerChangedMessage(this, CurrentHealth, MaxHealth));
         }
     }
 }

@@ -54,7 +54,7 @@ namespace MagicalTower.UI
                 return;
             }
 
-            var color = report.Target is TowerHealth ? towerDamageColor : enemyDamageColor;
+            var color = report.Target is PlayersTower ? towerDamageColor : enemyDamageColor;
             SpawnAt(report.Amount, color, report.WorldPosition);
         }
 

@@ -12,17 +12,20 @@ namespace MagicalTower.Runtime
 
         private Vector3 direction = Vector3.forward;
         private Transform vfxRoot;
+        private GenericObjectPool explosionEffectPool;
         private float age;
         private bool exploded;
 
         public void Configure(
             ProjectileDefinition projectileDefinition,
             Vector3 flyDirection,
-            Transform effectsRoot)
+            Transform effectsRoot,
+            GenericObjectPool effectPool = null)
         {
             definition = projectileDefinition;
             direction = flyDirection.sqrMagnitude > 0.001f ? flyDirection.normalized : transform.forward;
             vfxRoot = effectsRoot;
+            explosionEffectPool = effectPool;
             age = 0f;
             exploded = false;
         }
@@ -79,19 +82,39 @@ namespace MagicalTower.Runtime
                 DamageArea(position);
             }
 
-            Destroy(gameObject);
+            ReleaseOrDestroy();
         }
 
         private void PlayExplosionEffect(Vector3 position)
         {
-            if (explosionEffectPrefab == null)
+            FireNovaEffect instance = null;
+            if (explosionEffectPool != null)
+            {
+                instance = explosionEffectPool.Rent<FireNovaEffect>(position, Quaternion.identity);
+            }
+            else if (explosionEffectPrefab != null)
+            {
+                instance = Instantiate(explosionEffectPrefab, position, Quaternion.identity, vfxRoot);
+            }
+
+            if (instance == null)
             {
                 return;
             }
 
-            var instance = Instantiate(explosionEffectPrefab, position, Quaternion.identity, vfxRoot);
             var radius = definition != null ? definition.ImpactRadius : 0f;
             instance.Play(radius);
+        }
+
+        private void ReleaseOrDestroy()
+        {
+            if (TryGetComponent<PooledObject>(out var pooledObject) && pooledObject.HasOwner)
+            {
+                pooledObject.Release();
+                return;
+            }
+
+            Destroy(gameObject);
         }
 
         private void DamageArea(Vector3 position)
@@ -105,7 +128,7 @@ namespace MagicalTower.Runtime
                     continue;
                 }
 
-                if (receiver is TowerHealth)
+                if (receiver is PlayersTower)
                 {
                     continue;
                 }
@@ -124,7 +147,7 @@ namespace MagicalTower.Runtime
 
         private static bool IsTowerCollider(Collider collider)
         {
-            return collider != null && DamageReceiverLookup.FromCollider(collider) is TowerHealth;
+            return collider != null && DamageReceiverLookup.FromCollider(collider) is PlayersTower;
         }
     }
 }

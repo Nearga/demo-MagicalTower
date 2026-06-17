@@ -13,6 +13,12 @@ namespace MagicalTower.Runtime
         private float elapsed;
         private bool hit;
 
+        private void OnDisable()
+        {
+            target = null;
+            hit = false;
+        }
+
         public void Configure(ProjectileDefinition projectileDefinition, EnemyAgent targetEnemy)
         {
             definition = projectileDefinition;
@@ -30,13 +36,13 @@ namespace MagicalTower.Runtime
         {
             if (definition == null || target == null || hit)
             {
-                Destroy(gameObject);
+                ReleaseOrDestroy();
                 return;
             }
 
             if (!target.IsAlive)
             {
-                Destroy(gameObject);
+                ReleaseOrDestroy();
                 return;
             }
 
@@ -65,6 +71,17 @@ namespace MagicalTower.Runtime
                 LogChannel.Damage,
                 $"Barrage dealt {report.Amount} damage to {target.Definition.DisplayName}. Fatal: {report.WasFatal}.",
                 this);
+            ReleaseOrDestroy();
+        }
+
+        private void ReleaseOrDestroy()
+        {
+            if (TryGetComponent<PooledObject>(out var pooledObject) && pooledObject.HasOwner)
+            {
+                pooledObject.Release();
+                return;
+            }
+
             Destroy(gameObject);
         }
     }

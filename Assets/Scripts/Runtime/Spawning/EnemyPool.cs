@@ -1,8 +1,6 @@
-using System.Collections.Generic;
+using System;
 using MagicalTower.Content;
 using UnityEngine;
-using VContainer;
-using VContainer.Unity;
 
 namespace MagicalTower.Runtime
 {
@@ -11,26 +9,10 @@ namespace MagicalTower.Runtime
         [SerializeField] private EnemyPoolConfig config;
         [SerializeField] private EnemyAgent enemyPrefab;
         [SerializeField] private Transform poolRoot;
+        [SerializeField] private GenericObjectPool objectPool;
+        [SerializeField] private GenericObjectPool burningVisualPool;
 
-        private readonly Queue<EnemyAgent> inactiveEnemies = new Queue<EnemyAgent>();
-        private IObjectResolver objectResolver;
-        private ActiveEnemyRegistry registry;
-        private TowerHealth targetTower;
-        private int createdCount;
-        private bool warnedMissingPrefab;
-
-        private int InitialCapacity => config != null ? config.InitialCapacity : 0;
-        private int MaxCapacity => config != null ? config.MaxCapacity : 50;
-
-        [Inject]
-        public void Construct(IObjectResolver resolver, ActiveEnemyRegistry activeRegistry, TowerHealth tower)
-        {
-            objectResolver = resolver;
-            registry = activeRegistry;
-            targetTower = tower;
-            enemyPrefab = enemyPrefab != null ? enemyPrefab : ResolvePrefabFromConfig();
-            Prewarm();
-        }
+        public GenericObjectPool BurningVisualPool => burningVisualPool;
 
         private void Awake()
         {
@@ -38,6 +20,18 @@ namespace MagicalTower.Runtime
             {
                 poolRoot = transform;
             }
+
+            if (objectPool == null)
+            {
+                objectPool = GetComponent<GenericObjectPool>();
+            }
+
+            enemyPrefab = enemyPrefab != null ? enemyPrefab : ResolvePrefabFromConfig();
+        }
+
+        private void Start()
+        {
+            PreparePools(prewarmEnemyPool: true);
         }
 
         public EnemyAgent Spawn(EnemyDefinition definition, Vector3 position, Quaternion rotation)
@@ -47,15 +41,14 @@ namespace MagicalTower.Runtime
                 return null;
             }
 
-            var enemy = GetOrCreate();
+            var enemy = RentEnemy(position, rotation);
             if (enemy == null)
             {
                 return null;
             }
 
-            enemy.transform.SetParent(poolRoot, true);
             enemy.transform.SetPositionAndRotation(position, rotation);
-            enemy.Configure(definition, targetTower, registry, this);
+            enemy.Configure(definition, this);
             enemy.gameObject.SetActive(true);
             GameLog.Info(LogChannel.Pooling, $"Activated pooled {definition.DisplayName}.", enemy);
             return enemy;
@@ -68,66 +61,57 @@ namespace MagicalTower.Runtime
                 return;
             }
 
-            enemy.gameObject.SetActive(false);
-            enemy.transform.SetParent(poolRoot, true);
-            inactiveEnemies.Enqueue(enemy);
+            var pooledObject = enemy.GetComponent<PooledObject>();
+            if (objectPool != null && pooledObject != null && pooledObject.Owner == objectPool)
+            {
+                objectPool.Return(enemy.gameObject);
+            }
+            else
+            {
+                enemy.gameObject.SetActive(false);
+                enemy.transform.SetParent(poolRoot, true);
+            }
+
             GameLog.Info(LogChannel.Pooling, "Returned enemy to pool.", enemy);
         }
 
-        private void Prewarm()
+        private EnemyAgent RentEnemy(Vector3 position, Quaternion rotation)
         {
-            for (var i = createdCount; i < InitialCapacity; i++)
-            {
-                var enemy = CreateEnemy();
-                if (enemy == null)
-                {
-                    return;
-                }
+            PreparePools(prewarmEnemyPool: true);
+            RequireObjectPool();
+            return objectPool.RentInactive<EnemyAgent>(position, rotation);
+        }
 
-                Release(enemy);
+        private void PreparePools(bool prewarmEnemyPool)
+        {
+            if (objectPool == null)
+            {
+                objectPool = GetComponent<GenericObjectPool>();
+            }
+
+            if (objectPool != null)
+            {
+                if (prewarmEnemyPool)
+                {
+                    objectPool.Prewarm();
+                }
             }
         }
 
-        private EnemyAgent GetOrCreate()
+        private void RequireObjectPool()
         {
-            while (inactiveEnemies.Count > 0)
+            if (objectPool != null)
             {
-                var enemy = inactiveEnemies.Dequeue();
-                if (enemy != null)
-                {
-                    return enemy;
-                }
+                return;
             }
 
-            if (createdCount >= MaxCapacity)
-            {
-                return null;
-            }
-
-            return CreateEnemy();
-        }
-
-        private EnemyAgent CreateEnemy()
-        {
-            enemyPrefab = enemyPrefab != null ? enemyPrefab : ResolvePrefabFromConfig();
-            if (enemyPrefab == null)
-            {
-                if (!warnedMissingPrefab)
-                {
-                    Debug.LogWarning("EnemyPool has no enemy prefab assigned.", this);
-                    warnedMissingPrefab = true;
-                }
-
-                return null;
-            }
-
-            var enemy = objectResolver != null
-                ? objectResolver.Instantiate(enemyPrefab, poolRoot)
-                : Instantiate(enemyPrefab, poolRoot);
-            enemy.gameObject.SetActive(false);
-            createdCount++;
-            GameLog.Info(LogChannel.Pooling, $"Created enemy pool instance {createdCount}/{MaxCapacity}.", enemy);
-            return enemy;
+            throw new InvalidOperationException(
+                "EnemyPool is misconfigured: objectPool is not assigned and no GenericObjectPool exists on the same GameObject. " +
+                $"EnemyPool='{name}', GameObjectPath='{GetHierarchyPath(transform)}', " +
+                $"Config='{(config != null ? config.name : "null")}', " +
+                $"EnemyPrefab='{(enemyPrefab != null ? enemyPrefab.name : "null")}', " +
+                $"PoolRoot='{(poolRoot != null ? GetHierarchyPath(poolRoot) : "null")}', " +
+                $"BurningVisualPool='{(burningVisualPool != null ? burningVisualPool.name : "null")}'.");
         }
 
         private EnemyAgent ResolvePrefabFromConfig()
@@ -138,6 +122,24 @@ namespace MagicalTower.Runtime
             }
 
             return config.EnemyPrefab.GetComponent<EnemyAgent>();
+        }
+
+        private static string GetHierarchyPath(Transform target)
+        {
+            if (target == null)
+            {
+                return "null";
+            }
+
+            var path = target.name;
+            var current = target.parent;
+            while (current != null)
+            {
+                path = $"{current.name}/{path}";
+                current = current.parent;
+            }
+
+            return path;
         }
     }
 }

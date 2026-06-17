@@ -48,7 +48,7 @@ namespace MagicalTower.Runtime
                 }
 
                 var spell = spells[i];
-                if (spell.Definition == null || spell.ProjectilePrefab == null)
+                if (spell.Definition == null || !spell.HasProjectileSource)
                 {
                     continue;
                 }
@@ -85,12 +85,16 @@ namespace MagicalTower.Runtime
                 direction = transform.forward;
             }
 
-            var instance = objectResolver != null
-                ? objectResolver.Instantiate(spell.ProjectilePrefab, start, Quaternion.LookRotation(direction.normalized), projectileRoot)
-                : Instantiate(spell.ProjectilePrefab, start, Quaternion.LookRotation(direction.normalized), projectileRoot);
+            var rotation = Quaternion.LookRotation(direction.normalized);
+            var instance = spell.RentProjectile(objectResolver, start, rotation, projectileRoot);
+            if (instance == null)
+            {
+                return;
+            }
+
             if (instance.TryGetComponent<LinearExplosiveProjectile>(out var projectile))
             {
-                projectile.Configure(spell.Definition.ProjectileDefinition, direction.normalized, vfxRoot);
+                projectile.Configure(spell.Definition.ProjectileDefinition, direction.normalized, vfxRoot, spell.ImpactEffectPool);
             }
         }
 
@@ -108,9 +112,11 @@ namespace MagicalTower.Runtime
                 var start = transform.position;
                 var direction = enemy.transform.position - start;
                 var rotation = direction.sqrMagnitude > 0.001f ? Quaternion.LookRotation(direction.normalized) : Quaternion.identity;
-                var instance = objectResolver != null
-                    ? objectResolver.Instantiate(spell.ProjectilePrefab, start, rotation, projectileRoot)
-                    : Instantiate(spell.ProjectilePrefab, start, rotation, projectileRoot);
+                var instance = spell.RentProjectile(objectResolver, start, rotation, projectileRoot);
+                if (instance == null)
+                {
+                    continue;
+                }
 
                 if (instance.TryGetComponent<ArcTargetProjectile>(out var projectile))
                 {
@@ -135,8 +141,28 @@ namespace MagicalTower.Runtime
     {
         [SerializeField] private SpellDefinition definition;
         [SerializeField] private GameObject projectilePrefab;
+        [SerializeField] private GenericObjectPool projectilePool;
+        [SerializeField] private GenericObjectPool impactEffectPool;
 
         public SpellDefinition Definition => definition;
         public GameObject ProjectilePrefab => projectilePrefab;
+        public GenericObjectPool ImpactEffectPool => impactEffectPool;
+        public bool HasProjectileSource => projectilePool != null || projectilePrefab != null;
+
+        public GameObject RentProjectile(
+            IObjectResolver objectResolver,
+            Vector3 position,
+            Quaternion rotation,
+            Transform fallbackParent)
+        {
+            if (projectilePool != null)
+            {
+                return projectilePool.Rent(position, rotation);
+            }
+
+            return objectResolver != null
+                ? objectResolver.Instantiate(projectilePrefab, position, rotation, fallbackParent)
+                : UnityEngine.Object.Instantiate(projectilePrefab, position, rotation, fallbackParent);
+        }
     }
 }

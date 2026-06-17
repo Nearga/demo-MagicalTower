@@ -32,6 +32,12 @@ namespace MagicalTower.Runtime
             pulseSequence = null;
         }
 
+        private void OnDisable()
+        {
+            pulseSequence?.Kill();
+            pulseSequence = null;
+        }
+
         public void Play()
         {
             gameObject.SetActive(true);
@@ -67,9 +73,20 @@ namespace MagicalTower.Runtime
                 {
                     if (this != null)
                     {
-                        Destroy(gameObject);
+                        ReleaseOrDestroy();
                     }
                 });
+        }
+
+        private void ReleaseOrDestroy()
+        {
+            if (TryGetComponent<PooledObject>(out var pooledObject) && pooledObject.HasOwner)
+            {
+                pooledObject.Release();
+                return;
+            }
+
+            Destroy(gameObject);
         }
     }
 }

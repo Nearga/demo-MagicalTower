@@ -34,6 +34,12 @@ namespace MagicalTower.Runtime
             sequence = null;
         }
 
+        private void OnDisable()
+        {
+            sequence?.Kill();
+            sequence = null;
+        }
+
         public void Play(float radius)
         {
             var targetRadius = Mathf.Max(0.01f, radius);
@@ -51,7 +57,7 @@ namespace MagicalTower.Runtime
                 .AppendInterval(holdDuration)
                 .AppendCallback(StopParticles)
                 .Append(visualRoot.DOScale(Vector3.one * (targetRadius * 0.82f), fadeDuration).SetEase(fadeEase))
-                .OnComplete(() => Destroy(gameObject));
+                .OnComplete(ReleaseOrDestroy);
         }
 
         private void StopParticles()
@@ -60,6 +66,22 @@ namespace MagicalTower.Runtime
             {
                 particleSystems[i].Stop(true, ParticleSystemStopBehavior.StopEmitting);
             }
+        }
+
+        private void ReleaseOrDestroy()
+        {
+            if (this == null)
+            {
+                return;
+            }
+
+            if (TryGetComponent<PooledObject>(out var pooledObject) && pooledObject.HasOwner)
+            {
+                pooledObject.Release();
+                return;
+            }
+
+            Destroy(gameObject);
         }
     }
 }

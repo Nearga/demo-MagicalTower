@@ -470,6 +470,10 @@ GameObject:
   - component: {fileID: 735522449}
   - component: {fileID: 735522454}
   - component: {fileID: 735522453}
+  - component: {fileID: 735522455}
+  - component: {fileID: 735522456}
+  - component: {fileID: 735522457}
+  - component: {fileID: 735522458}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -587,8 +591,12 @@ MonoBehaviour:
   spells:
   - definition: {fileID: 11400000, guid: 2ee69381bbe7e2c47b98dcd858a8ac31, type: 2}
     projectilePrefab: {fileID: 6689516957272319038, guid: 0f5d698cb69ddd64e84ef1f16127edf5, type: 3}
+    projectilePool: {fileID: 735522455}
+    impactEffectPool: {fileID: 735522457}
   - definition: {fileID: 11400000, guid: f0a5ce0b8c202914eb352184ad7aa9b2, type: 2}
     projectilePrefab: {fileID: 3679265396906989366, guid: b4db32946154e8144a51ad851dbd1cbb, type: 3}
+    projectilePool: {fileID: 735522456}
+    impactEffectPool: {fileID: 0}
   projectileRoot: {fileID: 735522452}
   vfxRoot: {fileID: 735522452}
   viewCamera: {fileID: 2125863363}
@@ -603,8 +611,80 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2d351f218d2f8f4f859c7946d6efdc7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerHealth
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.PlayersTower
   definition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
+--- !u!114 &735522455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735522448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b8d8a3e43a44d4b8a29d6fa3e3e318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GenericObjectPool
+  prefab: {fileID: 6689516957272319038, guid: 0f5d698cb69ddd64e84ef1f16127edf5, type: 3}
+  initialSize: 4
+  maxSize: 16
+  inactiveContainer: {fileID: 735522452}
+  prewarmOnAwake: 1
+  allowExpansionUntilMax: 1
+--- !u!114 &735522456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735522448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b8d8a3e43a44d4b8a29d6fa3e3e318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GenericObjectPool
+  prefab: {fileID: 3679265396906989366, guid: b4db32946154e8144a51ad851dbd1cbb, type: 3}
+  initialSize: 8
+  maxSize: 16
+  inactiveContainer: {fileID: 735522452}
+  prewarmOnAwake: 1
+  allowExpansionUntilMax: 1
+--- !u!114 &735522457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735522448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b8d8a3e43a44d4b8a29d6fa3e3e318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GenericObjectPool
+  prefab: {fileID: 2589799801975667508, guid: 29566c3060512ef48865ab49bb643b04, type: 3}
+  initialSize: 4
+  maxSize: 16
+  inactiveContainer: {fileID: 735522452}
+  prewarmOnAwake: 1
+  allowExpansionUntilMax: 1
+--- !u!114 &735522458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735522448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b8d8a3e43a44d4b8a29d6fa3e3e318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GenericObjectPool
+  prefab: {fileID: 3442026228879983929, guid: 7c89184f6f7489a45ae0772f11013aae, type: 3}
+  initialSize: 8
+  maxSize: 16
+  inactiveContainer: {fileID: 735522452}
+  prewarmOnAwake: 1
+  allowExpansionUntilMax: 1
 --- !u!1 &752095307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1225,6 +1305,7 @@ GameObject:
   - component: {fileID: 1921090773}
   - component: {fileID: 1921090772}
   - component: {fileID: 1921090771}
+  - component: {fileID: 1921090774}
   m_Layer: 0
   m_Name: EnemiesRoot
   m_TagString: Untagged
@@ -1262,6 +1343,8 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 15ce52ae41b61624fa9f1523f14856e2, type: 2}
   enemyPrefab: {fileID: 259133387336695461, guid: 36da35d941454f54aa006dda14cf5c7f, type: 3}
   poolRoot: {fileID: 1921090770}
+  objectPool: {fileID: 1921090774}
+  burningVisualPool: {fileID: 735522458}
 --- !u!114 &1921090772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1290,6 +1373,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d8844facce4b0448d1c1abf964d102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.ActiveEnemyRegistry
+--- !u!114 &1921090774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921090769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b8d8a3e43a44d4b8a29d6fa3e3e318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.GenericObjectPool
+  prefab: {fileID: 6968382133557434523, guid: 36da35d941454f54aa006dda14cf5c7f, type: 3}
+  initialSize: 8
+  maxSize: 20
+  inactiveContainer: {fileID: 1921090770}
+  prewarmOnAwake: 0
+  allowExpansionUntilMax: 1
 --- !u!1 &2011668982
 GameObject:
   m_ObjectHideFlags: 0

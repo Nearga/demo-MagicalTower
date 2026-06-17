@@ -132,7 +132,18 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
 - Clean up burning visuals when enemies despawn, die, disable, or return to the pool.
 - Validate in Play Mode and save a verification screenshot under `Assets/Screenshots~/`.
 
-## Phase 8: Validation
+
+## Phase 8: Replayability
+
+- Implement full game loop: play → game over → restart → play.
+- Add a Restart button to the game-over panel.
+- On restart, reload the active scene (`SceneManager.LoadScene`) to reset all runtime state.
+- Ensure `GameSession`, `TowerHealth`, enemy pool, and spawn schedule all reset correctly on scene load.
+- Consider a lightweight `SceneLoader` helper (`MonoBehaviour`) to own the scene reload call, keeping presenters decoupled from `SceneManager`.
+- Verify that elapsed time, health, enemy pool, and spawn pressure all start fresh after restart.
+
+
+## Phase 9: Validation
 
 - Compile/import validation:
   - Unity batchmode compile/import with Unity `6000.4.8f1`.
@@ -149,15 +160,6 @@ Build a designer-wired 3D Magical Tower prototype where code provides focused re
   - Barrage fires one arcing projectile per visible enemy
   - damage numbers appear for enemies and tower
   - spawn pressure increases over time.
-
-## Phase 9: Replayability
-
-- Implement full game loop: play → game over → restart → play.
-- Add a Restart button to the game-over panel.
-- On restart, reload the active scene (`SceneManager.LoadScene`) to reset all runtime state.
-- Ensure `GameSession`, `TowerHealth`, enemy pool, and spawn schedule all reset correctly on scene load.
-- Consider a lightweight `SceneLoader` helper (`MonoBehaviour`) to own the scene reload call, keeping presenters decoupled from `SceneManager`.
-- Verify that elapsed time, health, enemy pool, and spawn pressure all start fresh after restart.
 
 ## Phase 1 Status
 

@@ -29,7 +29,7 @@ namespace MagicalTower.Runtime
             ElapsedTime += Time.deltaTime;
         }
 
-        public void EndGame(TowerHealth tower)
+        public void EndGame(PlayersTower tower)
         {
             if (IsGameOver)
             {

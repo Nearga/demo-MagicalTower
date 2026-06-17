@@ -23,27 +23,20 @@ namespace MagicalTower.Runtime
         public bool IsAlive => gameObject.activeInHierarchy && CurrentHealth > 0;
         public Transform Transform => transform;
 
-        public void Configure(
-            EnemyDefinition enemyDefinition,
-            TowerHealth targetTower,
-            ActiveEnemyRegistry activeRegistry,
-            EnemyPool pool)
+        public void Configure(EnemyDefinition enemyDefinition, EnemyPool pool)
         {
             definition = enemyDefinition;
-            registry = activeRegistry;
             owningPool = pool;
 
             EnsureCollaborators();
             ResetFromDefinition();
-            movementController?.Configure(this, targetTower != null ? targetTower.transform : null);
-            attackController?.Configure(this, targetTower);
-            statusEffectController?.Configure(this);
         }
 
         [Inject]
-        public void Construct(RuntimeMessageBus bus)
+        public void Construct(RuntimeMessageBus bus, ActiveEnemyRegistry activeRegistry)
         {
             messageBus = bus;
+            registry = activeRegistry;
         }
 
         private void Awake()

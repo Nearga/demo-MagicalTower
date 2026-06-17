@@ -13,12 +13,12 @@ namespace MagicalTower.Runtime
 
         private EnemyPool enemyPool;
         private GameSession gameSession;
-        private TowerHealth targetTower;
+        private PlayersTower targetTower;
         private float spawnTimer;
         private bool warnedMissingReferences;
 
         [Inject]
-        public void Construct(EnemyPool pool, GameSession session, TowerHealth tower)
+        public void Construct(EnemyPool pool, GameSession session, PlayersTower tower)
         {
             enemyPool = pool;
             gameSession = session;

@@ -17,7 +17,7 @@ Read this before implementing tower health bars, damage number text, game-over d
 
 ## Runtime/source owners
 
-- `HudPresenter` — subscribes to `TowerHealthChangedMessage`; polls `GameSession.ElapsedTime` in `Update`.
+- `HudPresenter` — subscribes to `PlayersTowerChangedMessage`; polls `GameSession.ElapsedTime` in `Update`.
   - Drives a Unity `Slider` (fill-only) and a `TMP_Text` label for health.
   - Drives a `TMP_Text` label for elapsed time (frozen on game over).
 - `GameOverPresenter` — subscribes to `TowerDestroyedMessage`; enables the game-over panel GameObject.
@@ -25,7 +25,7 @@ Read this before implementing tower health bars, damage number text, game-over d
   - Restart button and scene reload are Phase 8 work.
 - `DamageNumberSpawner` — subscribes to `DamageDealtMessage` and `BurningTickMessage`.
   - Converts `report.WorldPosition` to screen space via `Camera.WorldToScreenPoint`.
-  - Distinguishes tower vs enemy hits by checking `report.Target is TowerHealth`.
+  - Distinguishes tower vs enemy hits by checking `report.Target is PlayersTower`.
   - Burning ticks use the separate `BurningTickMessage` for distinct coloring.
   - Instantiates `DamageNumber` prefab as a child under `DamageCanvas`.
 - `DamageNumber` — self-timed rise+fade driven by `Update`; destroys itself at end of lifetime.

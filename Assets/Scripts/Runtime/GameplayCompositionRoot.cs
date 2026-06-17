@@ -10,7 +10,7 @@ namespace MagicalTower.Runtime
         {
             builder.RegisterComponentInHierarchy<RuntimeMessageBus>();
             builder.RegisterComponentInHierarchy<GameSession>();
-            builder.RegisterComponentInHierarchy<TowerHealth>();
+            builder.RegisterComponentInHierarchy<PlayersTower>();
             builder.RegisterComponentInHierarchy<ActiveEnemyRegistry>();
             builder.RegisterComponentInHierarchy<EnemyPool>();
             builder.RegisterComponentInHierarchy<EnemySpawner>();
@@ -19,6 +19,15 @@ namespace MagicalTower.Runtime
             builder.RegisterComponentInHierarchy<MagicalTower.UI.HudPresenter>();
             builder.RegisterComponentInHierarchy<MagicalTower.UI.GameOverPresenter>();
             builder.RegisterComponentInHierarchy<MagicalTower.UI.DamageNumberSpawner>();
+
+            builder.RegisterBuildCallback(container =>
+            {
+                var pools = FindObjectsByType<GenericObjectPool>(FindObjectsInactive.Include);
+                for (var i = 0; i < pools.Length; i++)
+                {
+                    container.Inject(pools[i]);
+                }
+            });
         }
     }
 }

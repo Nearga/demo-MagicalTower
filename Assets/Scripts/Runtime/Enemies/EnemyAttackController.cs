@@ -1,11 +1,12 @@
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
     public sealed class EnemyAttackController : MonoBehaviour
     {
         [SerializeField] private EnemyAgent agent;
-        [SerializeField] private TowerHealth target;
+        [SerializeField] private PlayersTower target;
         [SerializeField] private Collider enemyCollider;
         [SerializeField] private Collider towerCollider;
         [SerializeField] private float contactTolerance = 0.05f;
@@ -13,12 +14,11 @@ namespace MagicalTower.Runtime
 
         private float cooldown;
 
-        public void Configure(EnemyAgent enemyAgent, TowerHealth targetTower)
+        [Inject]
+        public void Construct(PlayersTower targetTower)
         {
-            agent = enemyAgent;
             target = targetTower;
             towerCollider = target != null ? target.GetComponent<Collider>() : null;
-            ResolveEnemyCollider();
         }
 
         private void Awake()

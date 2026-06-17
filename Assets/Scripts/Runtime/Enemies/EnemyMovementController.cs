@@ -1,4 +1,5 @@
 using UnityEngine;
+using VContainer;
 
 namespace MagicalTower.Runtime
 {
@@ -11,12 +12,11 @@ namespace MagicalTower.Runtime
         [SerializeField] private float contactTolerance = 0.05f;
         [SerializeField] private float missingColliderStoppingDistance = 0.35f;
 
-        public void Configure(EnemyAgent enemyAgent, Transform targetTransform)
+        [Inject]
+        public void Construct(PlayersTower targetTower)
         {
-            agent = enemyAgent;
-            target = targetTransform;
-            targetCollider = target != null ? target.GetComponent<Collider>() : null;
-            ResolveEnemyCollider();
+            target = targetTower != null ? targetTower.transform : target;
+            targetCollider = targetTower != null ? targetTower.GetComponent<Collider>() : targetCollider;
         }
 
         private void Awake()

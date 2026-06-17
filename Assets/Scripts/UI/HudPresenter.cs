@@ -23,7 +23,7 @@ namespace MagicalTower.UI
         public void Construct(GameSession session, RuntimeMessageBus messageBus)
         {
             gameSession = session;
-            healthSubscription = messageBus.Subscribe<TowerHealthChangedMessage>(OnTowerHealthChanged);
+            healthSubscription = messageBus.Subscribe<PlayersTowerChangedMessage>(OnPlayersTowerChanged);
         }
 
         private void OnDestroy()
@@ -42,7 +42,7 @@ namespace MagicalTower.UI
             elapsedTimeLabel.text = FormatTime(gameSession.ElapsedTime);
         }
 
-        private void OnTowerHealthChanged(TowerHealthChangedMessage message)
+        private void OnPlayersTowerChanged(PlayersTowerChangedMessage message)
         {
             if (healthSlider != null && message.MaxHealth > 0)
             {

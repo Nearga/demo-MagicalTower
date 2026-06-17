@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2d351f218d2f8f4f859c7946d6efdc7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.TowerHealth
+  m_EditorClassIdentifier: Assembly-CSharp::MagicalTower.Runtime.PlayersTower
   definition: {fileID: 11400000, guid: 22238cecd7cb7dc4181c002a565032e7, type: 2}
   gameSession: {fileID: 0}
 --- !u!114 &5659717425589697244
